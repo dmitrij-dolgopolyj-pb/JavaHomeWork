@@ -1,4 +1,4 @@
-package com.pb.dolgopolyj.hm1;
+package com.pb.dolgopolyj.hw1;
 
 public class HelloWorld {
     public static void main(String[] args) {
