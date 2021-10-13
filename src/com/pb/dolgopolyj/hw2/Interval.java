@@ -1,3 +1,4 @@
+//Создаваемая программа включается в пакет для выполнения Задания №2(hw2)
 package com.pb.dolgopolyj.hw2;
 
 public class Interval {
