@@ -60,7 +60,7 @@ public class Calculator {
                caclcresult=operand1*operand2;
                break;
            case ('/'):
-               caclcresult=operand1/operand2;
+               caclcresult=(double) operand1/operand2;
                break;
 
            default:
