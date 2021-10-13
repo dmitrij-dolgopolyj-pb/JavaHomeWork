@@ -2,7 +2,6 @@
 package com.pb.dolgopolyj.hw2;
 
 //Для взаимодействия с пользователем импортируем класс Scanner
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 // Создаем класс Calculator
@@ -44,7 +43,7 @@ public class Calculator {
        //если недопустимой операции нет, продолжаем выполнение программы
 
        //Объявляем и инициализируем переменную для хранения результата вычисления
-       float caclcresult=0;
+       double caclcresult=0;
        //Объявляем и инициализируем переменную для результата корректности операции
        boolean correctoperation=true;
 
