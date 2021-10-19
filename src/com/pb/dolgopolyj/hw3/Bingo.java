@@ -2,6 +2,7 @@
 package com.pb.dolgopolyj.hw3;
 
 //Для взаимодействия с пользователем импортируем класс Scanner
+import java.util.Random;
 import java.util.Scanner;
 
 // Создаем класс Bingo
@@ -24,9 +25,11 @@ public class Bingo
         int numberAttempts=0;
         //Cообщаем о способе завершения программы
         System.out.println("Если вы хотите закончить игру, вместо числа введите 'exit'");
-
+        //Объявляем и инициализируем случайное число для отгадывания
+        Random random=new Random();
+        int randomNumber=random.nextInt(100);
         //Угадываем число до тех пор, пока пользователь не остановит программу вводом 'exit'
-        while (userString.equals("exit")==false)
+        for (;;)
             {
             //Обновляем счетчик попытки и сообщаем ее номер
             numberAttempts++;
@@ -36,7 +39,7 @@ public class Bingo
             //Если пользователь больше не хочет играть, выходим из игры
             if (userString.equals("exit")==true)
                 {
-                System.out.println("Жаль, что Вы так и не отгадали это число:");
+                System.out.println("Жаль, что Вы так и не отгадали это число:"+randomNumber);
                 break;
                 }
             System.out.println("Вы ввели:" + userString);
