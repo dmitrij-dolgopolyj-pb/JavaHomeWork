@@ -17,7 +17,7 @@ public class Array {
         int userInInt;
         //Инициализируем переменные-cчетчики для определения суммы элементов массива
         // и количества в нем положительных чисел
-        int arraySum=0,numberPositiveNumb=0,min;
+        int arraySum=0,numberPositiveNumb=0;
 
         //Создаем строковую переменную для получения от пользователя вводимых значений
         String userString="";
