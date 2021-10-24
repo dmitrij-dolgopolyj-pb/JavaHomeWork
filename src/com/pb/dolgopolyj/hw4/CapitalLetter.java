@@ -2,19 +2,31 @@
 package com.pb.dolgopolyj.hw4;
 
 //Для взаимодействия с пользователем импортируем класс Scanner
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Scanner;
 
 // Создаем класс CapitalLetter
 public class CapitalLetter
 {
-    //Создаем метод для вывода на печать массива отдельных слов
-    static void printArrayWord (String[] arrayWord)
+    //Создаем метод для деления строки на отдельные слова и преобразование их символов в верхний регистр
+    //Метод принимает в качестве аргумента строку strFirst, возвращает сстроковый массив слов userStrParts
+    static String[] getUserStrParts (String strFirst)
     {
-        for (int i=0;i<arrayWord.length;i++)
+        //Поскольку у нас будет два преобразования строки, объявляем два строковых массива для их работы
+        String[] strParts, strParts2;
+        //Преобразуем передаваемую строку в строковый массив отдельных слов, с помощью регулярного выражения (RegEx)
+        //в качестве разделителя слов принимаем пробелы, точку, запятую, тире и двоеточие
+        strParts=strFirst.split("\\s*(\\s|,|-|:|\\.)\\s*");
+        //Уже зная размерность массива strParts, инициализируем массив strParts2
+        strParts2=new String[strParts.length];
+        for (int i=0;i<strParts.length;i++)
         {
-            //Печатаем очередное слово
-            System.out.print(arrayWord[i]+"$");
+            //Преобразуем буквы в словах слов в верхний регистр и сохраняем результат во втором массиве
+            strParts2[i]=strParts[i].toUpperCase();
         }
+        //Возвращаем уже преобразованные в верхний регистр слова
+        return strParts2;
     }
 
     // Объявляем и описываем главный метод класса CapitalLetter
@@ -22,12 +34,8 @@ public class CapitalLetter
     {
         //Объявляем строковую переменную для получения от пользователя первоначальной строки
         String userString;
-
         //Cоздаём объект класса Scanner для обработки ввода с клавиатуры
         Scanner in = new Scanner(System.in);
-
-        //Объявляем строковый массив для хранения отдельных слов из первоначальной строки
-        String[] userStrParts;
 
         //Выводим на экран приветствие программы и выполняемые ей действия
         System.out.println("*** Добрый день! ***\nЭто класс 'CapitalLetter'.");
@@ -36,18 +44,26 @@ public class CapitalLetter
         //Cообщаем о порядке разделения слов в строке и запрашиваем ее ввод
         System.out.println("В качестве разделителя слов в строке можно использовать пробелы, точку, запятую, тире и двоеточие.");
         System.out.println("Введите строку для требуемого преобразования:");
-
         userString = in.nextLine();
 
-        System.out.println("Ваша строка:"+userString);
+        //Создаем копию введенной строки в виде массива символов для дальнейших преобразований
+        char[] copyString=userString.toCharArray();
 
-       //Преобразуем введенную строку в строковый массив отдельных слов с помощью регулярного выражения (RegEx)
-       //в качестве разделителя слов принимаем пробелы, точку, запятую, тире и двоеточие
-       userStrParts=userString.split("\\s|,|:|-|\\.");
-        //userStrParts=userString.split("\\s*(\\s|,|-|\\.)\\s*");
+        //Объявляем строковый массив для хранения отдельных слов из первоначальной строки
+        //после дробления строки и преобразования слов, заполняем его с помощью своего метода
+        String[] userStrParts=getUserStrParts(userString);
 
-        //Организуем печать измененной строки с помощью метода printArrayWord
-        printArrayWord (userStrParts);
+        System.out.println("Копия первоначальной строки:");
+        for (int i=0;i<userString.length();i++)
+        {
+            System.out.print(copyString[i]);
+        }
+        System.out.println("\nПолученные преобразованные слова:");
+        for (int i=0;i<userStrParts.length;i++)
+        {
+            //Печатаем очередное слово
+            System.out.print("cлово"+i+":"+userStrParts[i]);
+        }
 
        //Благодарности :)
         System.out.println("*** Cпасибо за использование класса 'CapitalLetter'! ***");
