@@ -16,32 +16,79 @@ public class Anagram
     static boolean compareStrArray (String[] strMas1,String[] strMas2)
     {
         //Нам необходимо задать переменную, которая будет отвечать за количество совпадений слов
-        int numberCoin = 0;
+        int numberCoinWord = 0;
+        //А также необходимо задать переменную, которая будет отвечать за количество совпадений букв в словах
+        int numberCoinLetter = 0;
+        //Инициализируем массив, который будет индикатором выявленных совпадений слов второй строки с первой
+        boolean[] compareTrueStrMas2=new boolean[strMas2.length];
+        //Первоначально всем его элементам присваеваем значения false-совпадений пока не найдено
+        for (int i=0;i< strMas2.length;i++) compareTrueStrMas2[i]=false;
+
         //Если количество слов в строках не совпадают, это не анаграмма
         if (strMas1.length==strMas2.length)
         {
 
             //Организуем цикл сравнения всех слов из первого массива со словами другого
-            for (int i = 0; i < strMas1.length; i++) {
-                for (int k = 0; k < strMas2.length; k++) {
-                    //Для начала найдем совпадения размеров слов
-                    if (strMas1[i].length() == strMas2[k].length()) {
-                        //размеры слов совпали,организуем проверку их содержимого
+            for (int i = 0; i < strMas1.length; i++)
+            {
+                for (int k = 0; k < strMas2.length; k++)
+                {
+                    //Дальнейшую проверку в этом цикле выполняем в том случае, если ранее не найдено совпадение этого слова
+                    //в строке №2 со словом в строке №1
+                    if (compareTrueStrMas2[k]!=true)
+                    {
+                        //Для начала найдем совпадения размеров слов
+                        if (strMas1[i].length() == strMas2[k].length())
+                        {
+                            //размеры слов совпали,организуем проверку их содержимого
+                            //обнуляем счетчик совпадений букв
+                            numberCoinLetter=0;
+                            //Инициализируем массив, который будет индикатором выявленных совпадений букв двух слов
+                            boolean[] compareTrueLetterStrMas2=new boolean[strMas2[k].length()];
+                            //Первоначально всем его элементам присваеваем значения false-совпадений ,букв пока не найдено
+                            for (int l=0;l<strMas2[k].length();l++) compareTrueLetterStrMas2[l]=false;
 
+                            //Проверяем в цикле совпадение букв двух сравниваемых слов из разных строк
+                            for (int b=0;b<strMas1[i].length();b++)
+                            {
+                                for (int c=0;c<strMas2[k].length();c++)
+                                {
+                                    //Дальнейшую проверку в этом цикле выполняем в том случае, если ранее не найдено
+                                    //совпадение этой буквы в проверяемых словах
+                                    if (compareTrueLetterStrMas2[c]!=true)
+                                    {
+                                        if (strMas1[i].charAt(b) == strMas2[k].charAt(c)) {
+                                            // наращиваем счетчик совпадений букв
+                                            numberCoinLetter++;
+                                            //Cообщаем программе, что эта буква уже найдена в слове
+                                            compareTrueLetterStrMas2[c] = true;
+                                            //заканчиваем цикл по переменной с
+                                            c = strMas2[k].length();
+                                        }
+                                    }
+                                }
+                            }
+                            //Проверяем, все ли буквы в словах совпали
+                            if (strMas1[i].length()==numberCoinLetter)
+                            {
+                                //Да, наращиваем счетчик совпадений cлов
+                                numberCoinWord++;
+                                //Cообщаем программе, что это слово второй строки уже нашло свою анаграмму в первой строке
+                                compareTrueStrMas2[k] = true;
+                                //Сообщаем о найденном совпадении слов
+                                System.out.print("Есть совпадение cлов №" + numberCoinWord+":");
+                                System.out.print(strMas1[i]+" и "+strMas2[k]+";\n");
+                                //заканчиваем цикл по переменной K
+                                k = strMas2.length;
+                            }
 
-
-
-                        // наращиваем счетчик совпадений
-                        numberCoin++;
-                        //заканчиваем цикл по переменной K
-                        k= strMas2.length;
-                        System.out.println("Есть совпадение №" + numberCoin);
+                        }
                     }
                 }
             }
         }
         //Если количество совпадений слов равно их количеству в массивах, это анаграмма
-        if (numberCoin==strMas1.length) return true;
+        if (numberCoinWord==strMas1.length) return true;
         //Иначе это просто разные строки с одинаковым количеством слов в них
         else return false;
     }
