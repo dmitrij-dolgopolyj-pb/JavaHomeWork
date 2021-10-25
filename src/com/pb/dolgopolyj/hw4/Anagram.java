@@ -109,21 +109,6 @@ public class Anagram
         System.out.println("Введите строку №2:");
         userString2=in.nextLine();
 
-        //Создаем копии введенных строк в виде массивов символов для дальнейших преобразований
-        //char[] copyString1=userString1.toCharArray();
-        //char[] copyString2=userString2.toCharArray();
-        //Проверяем правильность копий строк
-        //System.out.println("Полученная копия строки 1:");
-        //for (int i=0;i<copyString1.length;i++)
-        //{
-        //    System.out.print(copyString1[i]);
-        //}
-        //System.out.println("\nПолученная копия строки 2:");
-        //for (int i=0;i<copyString2.length;i++)
-        //{
-        //    System.out.print(copyString2[i]);
-        //}
-
         //Объявляем строковый массив для хранения отдельных слов из строки №1, введенной пользователем.
         //Для их нахождения и преобразования в верхний регистр (это поможет сравнению слов в случае,
         //если они состоят в вводимых пользователем строках из строчных и заглавных букв)
