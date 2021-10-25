@@ -2,15 +2,13 @@
 package com.pb.dolgopolyj.hw4;
 
 //Для взаимодействия с пользователем импортируем класс Scanner
-import java.nio.charset.StandardCharsets;
-import java.util.Locale;
 import java.util.Scanner;
 
 // Создаем класс CapitalLetter
 public class CapitalLetter
 {
     //Создаем метод для деления строки на отдельные слова и преобразование их символов в верхний регистр
-    //Метод принимает в качестве аргумента строку strFirst, возвращает сстроковый массив слов userStrParts
+    //Метод принимает в качестве аргумента строку strFirst, возвращает строковый массив
     static String[] getUserStrParts (String strFirst)
     {
         //Поскольку у нас будет два преобразования строки, объявляем два строковых массива для их работы
@@ -25,7 +23,7 @@ public class CapitalLetter
             //Преобразуем буквы в словах слов в верхний регистр и сохраняем результат во втором массиве
             strParts2[i]=strParts[i].toUpperCase();
         }
-        //Возвращаем уже преобразованные в верхний регистр слова
+        //Возвращаем уже преобразованные в верхний регистр слова в строковом массиве
         return strParts2;
     }
 
@@ -53,19 +51,34 @@ public class CapitalLetter
         //после дробления строки и преобразования слов, заполняем его с помощью своего метода
         String[] userStrParts=getUserStrParts(userString);
 
-        System.out.println("Копия первоначальной строки:");
-        for (int i=0;i<userString.length();i++)
+        //Инициализируем переменную, отвечающую за обработку номера слова в строке пользователя
+        int wordNumber=0;
+        //Создаем символьные переменные для опознования в строке знаков припинания и пробелов
+        char s=" ".charAt(0),s1=",".charAt(0),s2=".".charAt(0),s3=":".charAt(0),s4="-".charAt(0);
+
+        //Запускаем цикл для изменения первых символов слов в строке пользователя
+        for (int i=0;i<copyString.length;i++)
+        {
+            //Проверку продолжаем, если в букве №i строки не символ препинания
+            if (copyString[i]!=s&&copyString[i]!=s1&&copyString[i]!=s2&&copyString[i]!=s3&&copyString[i]!=s4)
+                {
+                //найден первый символ слова №wordNumber
+                //необходимо заменить его первым символом из преобразованного слова
+                copyString[i]=userStrParts[wordNumber].charAt(0);
+                //наращиваем счетчик i, пропуская текущее слово до следующих разделителей
+                i=i+userStrParts[wordNumber].length()-1;
+                //переходим к обработке следующего слова в строке
+                wordNumber++;
+                }
+        }
+
+        System.out.println("Полученная после преобразования строка:");
+        for (int i=0;i<copyString.length;i++)
         {
             System.out.print(copyString[i]);
         }
-        System.out.println("\nПолученные преобразованные слова:");
-        for (int i=0;i<userStrParts.length;i++)
-        {
-            //Печатаем очередное слово
-            System.out.print("cлово"+i+":"+userStrParts[i]);
-        }
 
        //Благодарности :)
-        System.out.println("*** Cпасибо за использование класса 'CapitalLetter'! ***");
+        System.out.println("\n*** Cпасибо за использование класса 'CapitalLetter'! ***");
     }
 }
