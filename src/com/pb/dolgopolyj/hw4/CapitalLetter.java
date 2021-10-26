@@ -15,7 +15,7 @@ public class CapitalLetter
         String[] strParts, strParts2;
         //Преобразуем передаваемую строку в строковый массив отдельных слов, с помощью регулярного выражения (RegEx)
         //в качестве разделителя слов принимаем пробелы, точку, запятую, тире и двоеточие
-        strParts=strFirst.split("\\s*(\\s|,|-|:|\\.)\\s*");
+        strParts=strFirst.split("\\s*(\\s|,|-|—|:|\\.)\\s*");
         //Уже зная размерность массива strParts, инициализируем массив strParts2
         strParts2=new String[strParts.length];
         for (int i=0;i<strParts.length;i++)
@@ -40,7 +40,7 @@ public class CapitalLetter
         System.out.println("Он переводит первую букву каждого слова заданной строки в верхний регистр.");
 
         //Cообщаем о порядке разделения слов в строке и запрашиваем ее ввод
-        System.out.println("В качестве разделителя слов в строке можно использовать пробелы, точку, запятую, тире и двоеточие.");
+        System.out.println("В качестве разделителя слов в строке можно использовать пробелы, точку, запятую, дефис, тире и двоеточие.");
         System.out.println("Введите строку для требуемого преобразования:");
         userString = in.nextLine();
 
@@ -54,13 +54,13 @@ public class CapitalLetter
         //Инициализируем переменную, отвечающую за обработку номера слова в строке пользователя
         int wordNumber=0;
         //Создаем символьные переменные для опознования в строке знаков припинания и пробелов
-        char s=" ".charAt(0),s1=",".charAt(0),s2=".".charAt(0),s3=":".charAt(0),s4="-".charAt(0);
+        char s=" ".charAt(0),s1=",".charAt(0),s2=".".charAt(0),s3=":".charAt(0),s4="-".charAt(0),s5="—".charAt(0);
 
         //Запускаем цикл для изменения первых символов слов в строке пользователя
         for (int i=0;i<copyString.length;i++)
         {
             //Проверку продолжаем, если в букве №i строки не символ препинания
-            if (copyString[i]!=s&&copyString[i]!=s1&&copyString[i]!=s2&&copyString[i]!=s3&&copyString[i]!=s4)
+            if (copyString[i]!=s&&copyString[i]!=s1&&copyString[i]!=s2&&copyString[i]!=s3&&copyString[i]!=s4&&copyString[i]!=s5)
                 {
                 //найден первый символ слова №wordNumber
                 //необходимо заменить его первым символом из преобразованного слова
