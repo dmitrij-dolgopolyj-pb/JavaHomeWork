@@ -14,6 +14,7 @@ public class Reader {
     private String birthDate;
     private String telephonNumber;
     private int ticketNumber;
+    //Объявляем и инициализируем статичную переменную, которая будет отвечать за количество читателей
     static private int readersNumber=0;
 
     //Создадим конструктор класса Reader
@@ -22,7 +23,7 @@ public class Reader {
         //Конструктор будет выполнять подсчет пользователей библиотеки,
         //т.е. при каждом новом обращении к нему он будет наращивать переменную readersNumber
         //и присваивать этот номер членскому билету читателя
-        this.readersNumber+=1;
+        readersNumber+=1;
         ticketNumber=readersNumber;
     }
 
@@ -71,5 +72,43 @@ public class Reader {
 
     public static int getReadersNumber() {
         return readersNumber;
+    }
+
+    //Создаем требуемые по заданию методы
+    //Выводим на консоль сообщение о количестве взятых читателем книг
+    //Немного усложним задачу - метод получает не только кол-во взятых книг, но и Ф.И.О. читателя
+    public static void takeBook (String readerName, int bookNumbers){
+        System.out.println(readerName+" взял(а) "+bookNumbers+" книг(и)");
+    }
+    //Выводим на консоль сообщение о наименованиях взятых читателем книг
+    public static void takeBook (String readerName, String [] bookNames){
+        System.out.println(readerName+" взял(а) книги:");
+        for (int i=0;i<bookNames.length;i++)
+            System.out.print(bookNames[i]+";");
+        System.out.println("\n");
+    }
+    //Выводим на консоль сообщение о взятых читателем книг (объектов класса Book)
+    public static void takeBook (String readerName, Book [] book){
+        System.out.println(readerName+" взял(а) книги:");
+        for (int i=0;i<book.length;i++)
+            System.out.print(book[i].getBookName()+"("+book[i].getAuthorName()+","+book[i].getYearPublish()+"г.);");
+        System.out.println("\n");
+    }
+
+    //Теперь, аналогично, делаем перегруженные методы returnBook()
+    public static void returnBook (String readerName, int bookNumbers){
+        System.out.println(readerName+" вернул(а) "+bookNumbers+" книг(и)");
+    }
+    public static void returnBook (String readerName, String [] bookNames){
+        System.out.println(readerName+" вернул(а) книги:");
+        for (int i=0;i<bookNames.length;i++)
+            System.out.print(bookNames[i]+";");
+        System.out.println("\n");
+    }
+    public static void returnBook (String readerName, Book [] book){
+        System.out.println(readerName+" вернул(а) книги:");
+        for (int i=0;i<book.length;i++)
+            System.out.print(book[i].getBookName()+"("+book[i].getAuthorName()+","+book[i].getYearPublish()+"г.);");
+        System.out.println("\n");
     }
 }

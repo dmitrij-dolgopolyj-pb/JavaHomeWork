@@ -74,9 +74,40 @@ public class Library {
 
         //Выводим на экран сведения о читателях
         System.out.println("\nВ нашей библиотеке обслуживаются следующие читатели:");
-        for (int i=0;i<numberOffReaders;i++) {
+        for (int i=0;i<Reader.getReadersNumber();i++) {
             System.out.println(reader[i].getUserName()+", д.р."+reader[i].getBirthDate()+", факультет:"+reader[i].getFacultyName()+", ч.б.№"+reader[i].getTicketNumber()+", телефон:"+reader[i].getTelephonNumber());
         }
+
+        //Примеры использования методов класса Reader
+        Reader.takeBook(reader[0].getUserName(),3);
+        Reader.takeBook(reader[2].getUserName(),5);
+        String [] bookNames=new String[2];
+        bookNames[0]="Огненное сияние";
+        bookNames[1]="Война и мир";
+        Reader.takeBook(reader[3].getUserName(), bookNames);
+        Reader.takeBook(reader[1].getUserName(), book);
+
+        //Демонстрация работы перегруженных методов returnBook
+        Reader.returnBook(reader[1].getUserName(),2);
+        String [] bookNames2=new String[3];
+        bookNames2[0]="Мертвые души";
+        bookNames2[1]="Му-Му";
+        bookNames2[2]="Остров сокровищ";
+        Reader.returnBook(reader[2].getUserName(), bookNames2);
+        //Для проверки метода returnBook (String readerName, Book [] book)
+        //создадим ещё один массив объектов класса Book
+        Book [] book2 = new Book[3];
+        for (int i=0;i<3;i++) book2[i]= new Book();
+        book2[0].setBookName("Письма с фронта");
+        book2[0].setAuthorName("Улюкаев С.В.");
+        book2[0].setYearPublish(2015);
+        book2[1].setBookName("Когда внезапности уже не было");
+        book2[1].setAuthorName("Исаев А.В.");
+        book2[1].setYearPublish(2002);
+        book2[2].setBookName("Необычная история");
+        book2[2].setAuthorName("Петров В.В.");
+        book2[2].setYearPublish(2005);
+        Reader.returnBook(reader[0].getUserName(), book2);
 
         //Благодарности :)
         System.out.println("\n*** Cпасибо за использование класса 'Library'! ***");
