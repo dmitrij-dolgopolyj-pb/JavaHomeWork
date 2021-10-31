@@ -24,31 +24,61 @@ public class Library {
         Book [] book = new Book[numberOffBooks];
         //Теперь инициализируем непосредственно сами "книги", то есть отдельные объекты класса Book
         for (int i=0;i<numberOffBooks;i++) book[i]= new Book();
+        //Заполняем данные о книгах в билиотеке
+        book[0].setBookName("Знакомьтесь: JAVA");
+        book[0].setAuthorName("Аккуратов Е.Е.");
+        book[0].setYearPublish(2009);
+        book[1].setBookName("Блицкриг 1941");
+        book[1].setAuthorName("Исаев А.В.");
+        book[1].setYearPublish(2001);
+        book[2].setBookName("Приключения");
+        book[2].setAuthorName("Иванов И.И.");
+        book[2].setYearPublish(2000);
+        book[3].setBookName("Словарь");
+        book[3].setAuthorName("Сидоров А.В.");
+        book[3].setYearPublish(1980);
+        book[4].setBookName("Энциклопедия");
+        book[4].setAuthorName("Гусев К.В.");
+        book[4].setYearPublish(2010);
 
+        //Инициируем переменную для определения количества читателей в библиотеке
+        int numberOffReaders=4;
+        //Инициализируем массив читателей в библиотеке, то есть ссылок на объекты класса Reader
+        Reader [] reader = new Reader [numberOffBooks];
+        //Теперь инициализируем массив данных непосредственных читателей, то есть отдельных объектов класса Reader
+        for (int i=0;i<numberOffReaders;i++) reader[i]= new Reader();
+        //Заполняем данные о читателях, обслуживаемых в билиотеке
+        reader[0].setUserName("Петров Игорь Николаевич");
+        reader[0].setBirthDate("08/09/1978");
+        reader[0].setFacultyName("Механический");
+        reader[0].setTelephonNumber("+380508819413");
+        reader[1].setUserName("Козаченко Станислав Владимирович");
+        reader[1].setBirthDate("03/12/2000");
+        reader[1].setFacultyName("Исторический");
+        reader[1].setTelephonNumber("+380998815414");
+        reader[2].setUserName("Усов Кирилл Станиславович");
+        reader[2].setBirthDate("05/02/2002");
+        reader[2].setFacultyName("Автоматизации");
+        reader[2].setTelephonNumber("+380936415525");
+        reader[3].setUserName("Назарова Елена Викторовна");
+        reader[3].setBirthDate("13/06/2002");
+        reader[3].setFacultyName("Экономики и финансов");
+        reader[3].setTelephonNumber("+380993336217");
 
-
-       book[0].setBookName("Знакомьтесь: JAVA");
-       book[0].setAuthorName("Аккуратов Е.Е.");
-       book[0].setYearPublish(2009);
-       book[1].setBookName("Блицкриг 1941");
-       book[1].setAuthorName("Исаев А.В.");
-       book[1].setYearPublish(2001);
-       book[2].setBookName("Приключения");
-       book[2].setAuthorName("Иванов И.И.");
-       book[2].setYearPublish(2000);
-       book[3].setBookName("Словарь");
-       book[3].setAuthorName("Сидоров А.В.");
-       book[3].setYearPublish(1980);
-       book[4].setBookName("Энциклопедия");
-       book[4].setAuthorName("Гусев К.В.");
-       book[4].setYearPublish(2010);
-
+        //Демонстрируем возможности класса Library
         //Выводим на экран имеющиеся в библиотеке книги
-        for (int i=0;i<book.length;i++) {
-            System.out.println("Название книги:" + book[i].getBookName() + ", автор:" + book[i].getAuthorName() + ", год издания:" + book[i].getYearPublish());
+        System.out.println("\nВ билиотеке для читателей доступны книги:");
+        for (int i=0;i<numberOffBooks;i++) {
+            System.out.println("\"" + book[i].getBookName() + "\", автор:" + book[i].getAuthorName() + ", " + book[i].getYearPublish()+"г.");
+        }
+
+        //Выводим на экран сведения о читателях
+        System.out.println("\nВ нашей библиотеке обслуживаются следующие читатели:");
+        for (int i=0;i<numberOffReaders;i++) {
+            System.out.println(reader[i].getUserName()+", д.р."+reader[i].getBirthDate()+", факультет:"+reader[i].getFacultyName()+", ч.б.№"+reader[i].getTicketNumber()+", телефон:"+reader[i].getTelephonNumber());
         }
 
         //Благодарности :)
-        System.out.println("*** Cпасибо за использование класса 'Library'! ***");
+        System.out.println("\n*** Cпасибо за использование класса 'Library'! ***");
     }
 }
