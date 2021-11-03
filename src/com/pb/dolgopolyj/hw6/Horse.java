@@ -18,6 +18,13 @@ public class Horse extends Animal{
         this.animalKind = "лошадь";
     }
 
+    //Переопределяем метод makeNoise
+    @Override
+    public void makeNoise(String name) {
+        super.makeNoise(name);
+        System.out.println("Не подходите к нему близко в это врямя, у животного сильный удар копытом!");
+    }
+
     public String getHorseName() {
         return horseName;
     }

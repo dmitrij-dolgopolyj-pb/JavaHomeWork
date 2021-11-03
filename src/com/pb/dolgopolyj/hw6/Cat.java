@@ -18,6 +18,13 @@ public class Cat extends Animal {
         this.animalKind = "кот";
     }
 
+    //Переопределяем метод makeNoise
+    @Override
+    public void makeNoise(String name) {
+        super.makeNoise(name);
+        System.out.println("Осторожно, при игре с ним животное царапается!");
+    }
+
     public String getCatName() {
         return catName;
     }
