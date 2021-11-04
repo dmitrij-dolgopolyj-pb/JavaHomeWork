@@ -25,6 +25,13 @@ public class Dog extends Animal {
         System.out.println("При этом животное громко лает!");
     }
 
+    //Переопределяем метод eat
+    @Override
+    public void eat(String name) {
+        System.out.println("Сейчас "+name+" кушает. Корм для этого животного-"+this.getFood()+".");
+        System.out.println("Если при этом вы будете пытаться забрать его миску с едой, он будет рычать!");
+    }
+
     public String getDogName() {
         return dogName;
     }

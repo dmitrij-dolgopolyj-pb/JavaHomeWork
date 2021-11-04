@@ -29,7 +29,7 @@ public class Animal {
     }
 
     public void eat (String name){
-        System.out.println(name+" кушает. У него свой корм-"+food+".");
+        System.out.println(name+" кушает. Корм этого животного-"+food+".");
     }
 
     public void sleep (String name){

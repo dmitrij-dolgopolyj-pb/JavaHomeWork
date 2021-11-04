@@ -16,31 +16,28 @@ public class VetСlinic {
         Animal vasilij = new Animal("Украина", "рыба");
 
         //Выведем инфу о Василии
-        System.out.println("Новое животное обитает в cтране:"+vasilij.getLocation()+", его еда-"+vasilij.getFood());
+        System.out.println("Животное обитает в cтране:"+vasilij.getLocation()+", его еда-"+vasilij.getFood());
         vasilij.makeNoise("Василий");
         vasilij.eat("Василий");
         vasilij.sleep("Василий");
 
         Dog baks = new Dog("Украина", "мясо", "Бакс");
         //Выведем инфу о Баксе
-        System.out.println("Знакомтесь, это животное-"+baks.getAnimalKind()+", его зовут - "+baks.getDogName());
-        System.out.println("Новое животное обитает в cтране:"+baks.getLocation()+", его еда-"+baks.getFood());
+        System.out.println("Знакомтесь, это животное-"+baks.getAnimalKind()+", по имени "+baks.getDogName()+", его еда-"+baks.getFood());
         baks.makeNoise(baks.getDogName());
         baks.eat(baks.getDogName());
         baks.sleep(baks.getDogName());
 
         Cat bajun = new Cat("РФ", "мыши", "Баюн");
         //Выведем инфу о Баюне
-        System.out.println("Знакомтесь, это животное-"+bajun.getAnimalKind()+", его зовут - "+bajun.getCatName());
-        System.out.println("Новое животное обитает в cтране:"+bajun.getLocation()+", его еда-"+bajun.getFood());
+        System.out.println("Знакомтесь, это животное-"+bajun.getAnimalKind()+", по имени "+bajun.getCatName()+", его еда-"+bajun.getFood());
         bajun.makeNoise(bajun.getCatName());
         bajun.eat(bajun.getCatName());
         bajun.sleep(bajun.getCatName());
 
         Horse bella = new Horse("Белорусия", "cено", "Белла");
         //Выведем инфу о Белле
-        System.out.println("Знакомтесь, это животное-"+bella.getAnimalKind()+", его зовут - "+bella.getHorseName());
-        System.out.println("Новое животное обитает в cтране:"+bella.getLocation()+", его еда-"+bella.getFood());
+        System.out.println("Знакомтесь, это животное-"+bella.getAnimalKind()+", по имени "+bella.getHorseName()+", его еда-"+bella.getFood());
         bella.makeNoise(bella.getHorseName());
         bella.eat(bella.getHorseName());
         bella.sleep(bella.getHorseName());
