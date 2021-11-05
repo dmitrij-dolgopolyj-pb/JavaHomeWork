@@ -34,10 +34,13 @@ public class Dog extends Animal {
         System.out.println("Если при этом вы будете пытаться забрать его миску с едой, он будет рычать!");
     }
 
-    //Переопределяем метод toString - cопроводим получаемую строку значками класса Dog - @, с обеих сторон
+    //Переопределяем метод toString
     @Override
     public String toString() {
-        return ("@"+super.toString()+"@");
+        return "Dog{" +
+                "dogName='" + dogName + '\'' +
+                ", animalKind='" + animalKind + '\'' +
+                '}';
     }
 
     //Переопределяем методы equals и hashCode

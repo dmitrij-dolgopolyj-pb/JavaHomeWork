@@ -34,10 +34,13 @@ public class Horse extends Animal{
         System.out.println("Осторожно, не подходите к животному сзади! Может сильно лягнуть!");
     }
 
-    //Переопределяем метод toString - cопроводим получаемую строку значками класса Horse - (H), с обеих сторон
+    //Переопределяем метод toString
     @Override
     public String toString() {
-        return ("(H)"+super.toString()+"(H)");
+        return "Horse{" +
+                "horseName='" + horseName + '\'' +
+                ", animalKind='" + animalKind + '\'' +
+                '}';
     }
 
     //Переопределяем методы equals и hashCode

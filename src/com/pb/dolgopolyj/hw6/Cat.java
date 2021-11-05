@@ -33,10 +33,13 @@ public class Cat extends Animal {
         System.out.println(name+"-"+this.animalKind+". Сейчас "+name+" кушает. Корм для этого животного-"+this.getFood()+".");
     }
 
-    //Переопределяем метод toString - cопроводим получаемую строку значками класса Cat - (c), с обеих сторон
+    //Переопределяем метод toString
     @Override
     public String toString() {
-        return ("(с)"+super.toString()+"(c)");
+        return "Cat{" +
+                "catName='" + catName + '\'' +
+                ", animalKind='" + animalKind + '\'' +
+                '}';
     }
 
     //Переопределяем методы equals и hashCode
