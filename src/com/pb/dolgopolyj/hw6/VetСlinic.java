@@ -1,19 +1,21 @@
 package com.pb.dolgopolyj.hw6;
 
+import java.lang.reflect.Constructor;
+
 /**
  * Класс, демонстрирующий работу c классами Animal и расширяющими его классами Dog, Cat, Horse.
  */
 
 
 public class VetСlinic {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         //Выводим на экран приветствие программы и выполняемые ей действия
         System.out.println("*** Добрый день! ***\nЭто класс 'VetСlinic'");
         System.out.println("Он демонстрирует работу c классами Animal и расширяющими его классами (Dog,Cat,Horse).\n");
 
         //Cоздаем новый объект класса Animal и выводим о нем информацию
-        Animal vasilij = new Animal("Украина", "рыба");
+        Animal vasilij = new Animal("Латвия", "рыба");
         System.out.println("Это класс:"+vasilij.toString());
         System.out.println("Животное обитает в cтране:"+vasilij.getLocation()+", его еда-"+vasilij.getFood());
         vasilij.makeNoise("Василий");
@@ -62,6 +64,29 @@ public class VetСlinic {
         System.out.println("eq bella pella:"+bella.equals(pella));
         System.out.println("eq bella murzic:"+bella.equals(veter));
         System.out.println("Хеш-код объекта bella:"+bella.hashCode()+"\n");
+
+        //Создадим массив всех наших животных для приема в клинике
+        Animal [] pacients = new Animal[4];
+        pacients[0]=vasilij;
+        pacients[1]=baks;
+        pacients[2]=bajun;
+        pacients[3]=bella;
+
+        //Отправляем в цикле всех животных на проверку к ветеринару
+        for (Animal i: pacients){
+            Veterinarian.treatAnimal(i);
+        }
+
+        //Теперь создадим с помощью рефлексии объект класса Veterinarian
+        Veterinarian priem= new Veterinarian();
+        Class clazz=priem.getClass();
+        Constructor constr=clazz.getConstructor(new Class[]{});
+        Object obj=constr.newInstance();
+        //Если все получилось, пошлем еще раз на прием к ветеринару двух животных
+        if (obj instanceof Veterinarian){
+        ((Veterinarian) obj).treatAnimal(pacients[1]);
+        ((Veterinarian) obj).treatAnimal(pacients[2]);
+        }
 
         //Благодарности :)
         System.out.println("\n*** Cпасибо за использование класса 'VetСlinic'! ***");
