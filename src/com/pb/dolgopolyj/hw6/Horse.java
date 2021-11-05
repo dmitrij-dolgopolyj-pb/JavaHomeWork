@@ -1,5 +1,7 @@
 package com.pb.dolgopolyj.hw6;
 
+import java.util.Objects;
+
 /**
  * Класс Horse, расширяющий класс Animal
  * в качестве дополнительных переменных используем:
@@ -30,6 +32,26 @@ public class Horse extends Animal{
     public void eat(String name) {
         System.out.println("Сейчас "+name+" кушает. Корм для этого животного-"+this.getFood()+".");
         System.out.println("Осторожно, не подходите к животному сзади! Может сильно лягнуть!");
+    }
+
+    //Переопределяем метод toString - cопроводим получаемую строку значками класса Horse - (H), с обеих сторон
+    @Override
+    public String toString() {
+        return ("(H)"+super.toString()+"(H)");
+    }
+
+    //Переопределяем методы equals и hashCode
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Horse horse = (Horse) o;
+        return Objects.equals(horseName, horse.horseName) && Objects.equals(animalKind, horse.animalKind);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(horseName, animalKind);
     }
 
     public String getHorseName() {
