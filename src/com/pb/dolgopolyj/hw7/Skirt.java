@@ -23,4 +23,7 @@ public class Skirt extends Clothes implements WomenClothes
                 +", цена:"+this.getPrice());
     }
 
+    public String getSkirtName() {
+        return skirtName;
+    }
 }

@@ -7,11 +7,13 @@ public class Tshirt extends Clothes implements ManClothes, WomenClothes
 {
     //Добавим переменную, отвечающую за название футболки
     private String tshirtName;
-
+    //Добавим переменную, отвечающую за тип футболки, если она мужская
+    private boolean tshirtForMan;
     //Cоздаем конструктор
-    public Tshirt(String tshirtName, Size clothingSize, float price, String color)
+    public Tshirt(String tshirtName, Size clothingSize, float price, String color, boolean tshirtForMan)
     {
         this.tshirtName = tshirtName;
+        this.tshirtForMan=tshirtForMan;
         this.setClothingSize(clothingSize);
         this.setPrice(price);
         this.setColor(color);
@@ -27,5 +29,13 @@ public class Tshirt extends Clothes implements ManClothes, WomenClothes
     public void dressWomen() {
         System.out.println("Футболка женская "+this.tshirtName+", размер "+this.getClothingSize()+", цвет -"+this.getColor()
                 +", цена:"+this.getPrice());
+    }
+
+    public String getTshirtName() {
+        return tshirtName;
+    }
+
+    public boolean isTshirtForMan() {
+        return tshirtForMan;
     }
 }
