@@ -13,6 +13,8 @@ public class OnlineShop
 
         //Cоздаём объект класса Scanner для обработки ввода с клавиатуры
         Scanner in = new Scanner(System.in);
+        //Cоздаём объект класса Auth
+        Auth newAuth = new Auth();
 
         //Объявляем переменную, отвечающую за ответы пользователя
         String answer;
@@ -23,38 +25,64 @@ public class OnlineShop
         System.out.println("*** Добрый день! ***\nВас приветствует наш 'OnlineShop'!!!");
         System.out.println("Мы предлагаем Вам зарегистрироваться и посетить сайт нашего онлайн магазина.");
         System.out.println("Если Вы согласны пройти регистрацию, введите 'да':");
-        answer=in.next();
+
+        //После тестирования раскоментить и убрать присваивание
+        //answer=in.next();
+        answer="да";
+
 
         //Если пользователь согласен, проходим регистрацию на сайте
         if (answer.equals("да"))
         {
             //Печатаем правила регистрации
             System.out.println("Для регистрации на нашем сайте Вам необходимо ввести свой уникальный логин и пароль.");
-            System.out.println("Длина логина должна быть от 5 до 20 символов, он должен содержать только латинские буквы и цифры.\n");
+            System.out.println("Длина логина должна быть от 5 до 20 символов, он может содержать только латинские буквы и цифры.\n");
 
             //Запросы ввода логина и пароля
-            System.out.println("Введите логин:");
-            login = in.next();
-            System.out.println("Вы ввели логин:"+login);
+//            System.out.println("Введите логин:");
+//            login = in.next();
+//            System.out.println("Вы ввели логин:"+login);
+//
+//            System.out.println("Длина пароля должна быть более 5, он может содержать только латинские буквы и цифры и знак подчеркивания.\n");
+//            System.out.println("Введите пароль:");
+//            password = in.next();
+//            System.out.println("Вы ввели пароль:"+password);
+//
+//            System.out.println("Введите пароль ещё раз:");
+//            confirmPassword = in.next();
+//            System.out.println("Вы ввели контрольный пароль:"+confirmPassword);
 
-            System.out.println("Введите пароль:");
-            password = in.next();
-            System.out.println("Вы ввели пароль:"+password);
+            //Для упрощения тестирования здесь статичные значения полей;
+            login="Дмитрий";password="dedis2016";confirmPassword="dedis2016";
 
-            System.out.println("Введите пароль ещё раз:");
-            confirmPassword = in.next();
-            System.out.println("Вы ввели контрольный пароль:"+confirmPassword);
 
-            Auth newAuth = new Auth();
+            //Здесь позже нужно создать try и catch для (signUp)
             newAuth.signUp(login,password,confirmPassword);
 
             System.out.println("На сайте зарегистрирован новый пользователь!\n");
             System.out.println("Его логин:"+newAuth.getLogin()+", пароль:"+newAuth.getPassword()+"\n");
+
+            System.out.println("Вы хотите сразу войти на наш сайт? Если согласны, введите 'да':");
+            //После тестирования раскоментить и убрать присваивание
+            //answer=in.next();
+            answer="да";
+
+            //Если пользователь согласен, проходим регистрацию на сайте
+            if (answer.equals("да"))
+            {
+                //Здесь позже нужно создать try и catch для (signIn)
+                newAuth.signIn("Дмитрий","dedis2016");
+            }
+            else
+            {
+                System.out.println("Ок, Вы можете посетить наш сайт в любое другое время. До встречи!");
+            }
+
         }
         //иначе заканчиваем диалог
         else
         {
-            System.out.println("Жаль, что Вы не пока не готовы зайти к нам! Ждем Вас в будущем!");
+            System.out.println("Жаль, что Вы пока не готовы зайти к нам! Ждем Вас в будущем!");
         }
 
         //Благодарности :)
