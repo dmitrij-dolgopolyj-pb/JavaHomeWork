@@ -12,38 +12,50 @@ public class Auth
     private String login, password;
 
     //Метод, отвечающий за регистрацию на сайте
-    public void signUp(String login, String password, String confirmPassword)
+    public void signUp(String login, String password, String confirmPassword) throws WrongLoginException
     {
         //Блок проверок правильности заполнения логина, пароля и контрольного пароля
-        if (login.length()<5||login.length()>20||login.matches("[a-z||A-Z||0-9]+")==false)
-            System.out.println("Неверный логин!");
+        if (login.length()<5||login.length()>20)
+        {
+            throw new WrongLoginException("Число символов логина не соответствует требованиям.");
+        }
         else
+        {
+            if (login.matches("[a-z||A-Z||0-9]+") == false) throw new WrongLoginException("Недопустимые символы в логине.");
+            else
             {
-                if (password.length()<5||password.matches("[a-z||A-Z||0-9||_]+")==false
-                        ||password.equals(confirmPassword)==false) System.out.println("Неверный пароль!");
+                if (password.length() < 5) throw new WrongPasswordException("Количество символов в пароле должно быть не менее пяти.");
                 else
-                {
-                    //Все проверки пройдены, присваиваем поля
-                    this.setLogin(login);
-                    this.setPassword(password);
-                    System.out.println("Поздравляем, регистрация на 'OnlineShop' прошла успешно!!!");
+                    {
+                    if (password.matches("[a-z||A-Z||0-9||_]+") == false) throw new WrongPasswordException("Недопустимые символы в пароле.");
+                    else
+                    {
+                        if (password.equals(confirmPassword) == false) throw new WrongPasswordException("Несоответствие пароля и контрольного пароля.");
+                        else
+                        {
+                            //Все проверки пройдены, присваиваем поля
+                            this.setLogin(login);
+                            this.setPassword(password);
+                        }
+                    }
                 }
             }
+        }
     }
 
     //Метод, отвечающий за вход на сайт после регистрации
-    public void signIn(String login, String password)
+    public void signIn(String login, String password) throws WrongLoginException
     {
         //Проверяем соответствие логина и пароля записанным в полях значениям
         if (this.login.equals(login)&&this.password.equals(password))
         {
-            //Проверка не прошла, выбрасываем исключение WrongLoginException.
+            //Проверка прошла успешно, пользователь зашел на сайт
             System.out.println(login+"!\n Приветствуем Вас на сайте нашего магазина 'OnlineShop'!");
         }
         else
         {
             //Проверка не прошла, выбрасываем исключение WrongLoginException.
-            System.out.println("Неверный логин/пароль!");
+            throw new WrongLoginException("Вы ввели неверный логин/пароль");
         }
     }
 
