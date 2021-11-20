@@ -14,51 +14,21 @@ public class Auth
     //Метод, отвечающий за регистрацию на сайте
     public void signUp(String login, String password, String confirmPassword)
     {
-
-        //Инициализируем логические переменные для установки "флагов" корректности логина и пароля
-        boolean loginCorrect=true;
-        boolean passwordCorrect=true;
-        //Для организации необходимых проверок переведем строки login, password в строковые массивы
-        char [] loginArray=login.toCharArray();
-        char [] passwordArray=password.toCharArray();
-
         //Блок проверок правильности заполнения логина, пароля и контрольного пароля
-        if (loginArray.length<5||loginArray.length>20) loginCorrect=false;
+        if (login.length()<5||login.length()>20||login.matches("[a-z||A-Z||0-9]+")==false)
+            System.out.println("Неверный логин!");
         else
             {
-                if (passwordArray.length<5) passwordCorrect=false;
+                if (password.length()<5||password.matches("[a-z||A-Z||0-9||_]+")==false
+                        ||password.equals(confirmPassword)==false) System.out.println("Неверный пароль!");
                 else
-                    {
-                        if (password.equals(confirmPassword)==false) passwordCorrect=false;
-                        else
-                        {
-                            //Проверяем логин и пароль на наличие "посторонних" символов
-                        }
-                    }
+                {
+                    //Все проверки пройдены, присваиваем поля
+                    this.setLogin(login);
+                    this.setPassword(password);
+                    System.out.println("Поздравляем, регистрация на 'OnlineShop' прошла успешно!!!");
+                }
             }
-
-
-        if (loginCorrect==true&&passwordCorrect==true)
-        {
-        //Все проверки пройдены, присваиваем поля
-        this.setLogin(login);
-        this.setPassword(password);
-        System.out.println("Поздравляем, регистрация на 'OnlineShop' прошла успешно!!!");
-        }
-        else
-        {
-        //Иначе, вызываем исключения
-            if (loginCorrect==false)
-            {
-                //вызываем исключение WrongLoginException
-                System.out.println("Неверный логин!");
-            }
-            else
-            {
-                //вызываем исключение WrongPasswordException
-                System.out.println("Неверный пароль!");
-            }
-        }
     }
 
     //Метод, отвечающий за вход на сайт после регистрации

@@ -53,7 +53,7 @@ public class OnlineShop
 //            System.out.println("Вы ввели контрольный пароль:"+confirmPassword);
 
             //Для упрощения тестирования здесь статичные значения полей;
-            login="Дмитрий";password="dedis2016";confirmPassword="dedis2016";
+            login="Dmitry";password="dedis_2016";confirmPassword="dedis_2016";
 
 
             //Здесь позже нужно создать try и catch для (signUp)
@@ -71,7 +71,7 @@ public class OnlineShop
             if (answer.equals("да"))
             {
                 //Здесь позже нужно создать try и catch для (signIn)
-                newAuth.signIn("Дмитрий","dedis2016");
+                //newAuth.signIn("Дмитрий","dedis2016");
             }
             else
             {
