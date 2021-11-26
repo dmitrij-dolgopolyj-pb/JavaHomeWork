@@ -38,9 +38,9 @@ public class Main
                     " общая размерность массива "+arrayDepth+" элемента(ов)!");
         }
         //Выводим необходимую информацию о классе
-        myNumBox.arrayInfo();
+        myNumBox.classInfo();
 
-        //Теперь выполним задание с тестированием массива NumBox<Float>
+        //Теперь выполним задание с тестированием класса NumBox<Float>
         System.out.println("\nТеперь тестируем класс NumBox<Float>:");
         arrayDepth=5;
         NumBox floatNumBox= new NumBox (arrayDepth);
@@ -68,9 +68,9 @@ public class Main
                     " общая размерность массива "+arrayDepth+" элемента(ов)!");
         }
         //Выводим необходимую информацию о классе
-        floatNumBox.arrayInfo();
+        floatNumBox.classInfo();
 
-        //Теперь выполним задание с тестированием массива NumBox<Integer>
+        //Теперь выполним задание с тестированием класса NumBox<Integer>
         System.out.println("\nТеперь тестируем класс NumBox<Integer>:");
         arrayDepth=6;
         NumBox intNumBox= new NumBox (arrayDepth);
@@ -100,7 +100,7 @@ public class Main
                     " общая размерность массива "+arrayDepth+" элемента(ов)!");
         }
         //Выводим необходимую информацию о классе
-        intNumBox.arrayInfo();
+        intNumBox.classInfo();
 
         System.out.println("\n*** Cпасибо за использование классов 'Main' и 'NumBox'***");
     }
