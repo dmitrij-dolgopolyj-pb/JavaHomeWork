@@ -1,6 +1,8 @@
 package com.pb.dolgopolyj.hw9;
 
 //Импортируем классы для работы с файлами
+import com.pb.dolgopolyj.hw10.NumBox;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -118,6 +120,9 @@ public class FileNumbers
             System.out.println("Ошибка записи файла №2: " + ex);
         }
         System.out.println("Запись в файл №2 \"" + path.toAbsolutePath() + "\" прошла успешно!\n");
+
+        NumBox<Integer> myNumBox= new NumBox<>(5);
+
 
         //Благодарности :)
      System.out.println("\n*** Cпасибо за использование класса 'FileNumbers'!!! ***");

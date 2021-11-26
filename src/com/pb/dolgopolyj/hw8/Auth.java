@@ -27,6 +27,8 @@ public class Auth
                 if (password.length() < 5) throw new WrongPasswordException("Количество символов в пароле должно быть не менее пяти.");
                 else
                     {
+                        //Можно написать регулярное выражение так, что и не потребуется до этого и проверка от 5 до 20
+                        //"[a-zA-Z0-9_]{5,20}" или для пароля:"[a-zA-Z0-9_]{5,}"
                     if (password.matches("[a-z||A-Z||0-9||_]+") == false) throw new WrongPasswordException("Недопустимые символы в пароле.");
                     else
                     {
