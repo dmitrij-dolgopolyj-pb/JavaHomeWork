@@ -76,4 +76,17 @@ public class NumBox<T extends Number>
         return this.get(maxNumber);
     }
 
+    //Создадим метод, выводящий на экран всю необходимую информацию о массиве
+    void arrayInfo()
+    {
+        int arrayDepth= this.length();
+        System.out.println("В нашем массиве находятся "+arrayDepth+" элемента(ов):");
+        for (int i=0; i<arrayDepth;i++)
+        {
+            System.out.println("T["+i+"]="+this.get(i));
+        }
+        System.out.println("Cумма всех элементов массива равна:"+this.sum());
+        System.out.println("Cреднее арифметическое нашего массива равно:"+this.average());
+        System.out.println("Максимальный элемент нашего массива это:"+this.max());
+    }
 }

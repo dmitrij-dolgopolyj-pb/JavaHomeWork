@@ -38,7 +38,7 @@ public class Main
                     " общая размерность массива "+arrayDepth+" элемента(ов)!");
         }
         //Выводим необходимую информацию о классе
-        arrayInfo(myNumBox);
+        myNumBox.arrayInfo();
 
         //Теперь выполним задание с тестированием массива NumBox<Float>
         System.out.println("\nТеперь тестируем класс NumBox<Float>:");
@@ -68,7 +68,7 @@ public class Main
                     " общая размерность массива "+arrayDepth+" элемента(ов)!");
         }
         //Выводим необходимую информацию о классе
-        arrayInfo(floatNumBox);
+        floatNumBox.arrayInfo();
 
         //Теперь выполним задание с тестированием массива NumBox<Integer>
         System.out.println("\nТеперь тестируем класс NumBox<Integer>:");
@@ -100,22 +100,8 @@ public class Main
                     " общая размерность массива "+arrayDepth+" элемента(ов)!");
         }
         //Выводим необходимую информацию о классе
-        arrayInfo(intNumBox);
+        intNumBox.arrayInfo();
 
         System.out.println("\n*** Cпасибо за использование классов 'Main' и 'NumBox'***");
-    }
-
-    //Создадим метод, выводящий на экран всю необходимую информацию о массиве
-    static void arrayInfo(NumBox numBox)
-    {
-        int arrayDepth= numBox.length();
-        System.out.println("В нашем массиве находятся "+arrayDepth+" элемента(ов):");
-        for (int i=0; i<arrayDepth;i++)
-        {
-            System.out.println("T["+i+"]="+numBox.get(i));
-        }
-        System.out.println("Cумма всех элементов массива равна:"+numBox.sum());
-        System.out.println("Cреднее арифметическое нашего массива равно:"+numBox.average());
-        System.out.println("Максимальный элемент нашего массива это:"+numBox.max());
     }
 }
