@@ -26,7 +26,6 @@ public class NumBox<T extends Number>
         //При попытке записать значение в несуществующий элемент массива, выбрасываем исключение
         if (currentElemArray==numBoxArray.length) throw new WrongNumberArrayElements(currentElemArray);
         numBoxArray[currentElemArray]=num;
-        System.out.println("В массив T["+currentElemArray+"] добавлено значение:"+numBoxArray[currentElemArray]);
         currentElemArray++;
     }
 
@@ -74,7 +73,7 @@ public class NumBox<T extends Number>
                 maxNumber=i;
             }
         }
-        return numBoxArray[maxNumber];
+        return this.get(maxNumber);
     }
 
 }
