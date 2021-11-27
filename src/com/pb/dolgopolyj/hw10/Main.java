@@ -49,6 +49,7 @@ public class Main
         Float number3=523.65F;
         Float number4=871.355566663F;
         Float number5=74.1F;
+        Float number6=4.221F;
 
         //Наполняем массив значениями
         try
@@ -59,7 +60,7 @@ public class Main
             floatNumBox.add(number4);
             floatNumBox.add(number5);
             //Следующая строка тестирует работу исключения
-            floatNumBox.add(number5);
+            floatNumBox.add(number6);
         }
         //Если мы попытались выйти при наполнении массива за его границы, ловим соответствующее исключение
         catch (WrongNumberArrayElements e)
@@ -72,7 +73,8 @@ public class Main
 
         //Теперь выполним задание с тестированием класса NumBox<Integer>
         System.out.println("\nТеперь тестируем класс NumBox<Integer>:");
-        arrayDepth=6;
+        arrayDepth=10;
+        //Для проверки работы программы этот массив заполним не в полном объеме (шесть элементов из возможных 10-ти)
         NumBox intNumBox= new NumBox (arrayDepth);
         Integer inumber1=75;
         Integer inumber2=550;
@@ -89,8 +91,6 @@ public class Main
             intNumBox.add(inumber3);
             intNumBox.add(inumber4);
             intNumBox.add(inumber5);
-            intNumBox.add(inumber6);
-            //Следующая строка тестирует работу исключения
             intNumBox.add(inumber6);
         }
         //Если мы попытались выйти при наполнении массива за его границы, ловим соответствующее исключение
