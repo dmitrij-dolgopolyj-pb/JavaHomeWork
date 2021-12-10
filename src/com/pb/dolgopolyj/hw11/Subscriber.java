@@ -70,17 +70,17 @@ public class Subscriber
     }
 
     //Создадим метод, выводящий на экран всю информацию об абоненте
-    void subscriberInfo()
+    static public void subscriberInfo(Subscriber subs)
     {
-        System.out.println("Ф.И.О.- "+this.fio);
-        System.out.println("Дата рождения - "+this.dateBirth);
+        System.out.println("\nФ.И.О.- "+subs.fio);
+        System.out.println("Дата рождения - "+subs.dateBirth);
         int i=0;
-        for (String p: phoneNumber)
+        for (String p: subs.phoneNumber)
         {
             i++;
             System.out.println("Телефон №"+i+":"+p);
         }
-        System.out.println("Адрес:"+this.address);
-        System.out.println("Дата создания/модификации данных абонента:"+this.dateIni);
+        System.out.println("Адрес:"+subs.address);
+        System.out.println("Дата создания/модификации данных абонента:"+subs.dateIni);
     }
 }
