@@ -85,17 +85,59 @@ public class Subscriber
         System.out.println("Дата создания/модификации данных абонента:"+subs.dateIni);
     }
 
-    //Создадим метод, редактирущий информацию об абоненте
-    public static void subscriberEdit(Subscriber subs)
+    //Создадим метод для ручного ввода нового телефона абонента
+    public static String inputNewPhoneNumber()
     {
+        //Объявляем нужные для работы строковые переменные
+        String newPhoneNumber, inString;
+        //Cоздаём объект класса Scanner для обработки ввода с клавиатуры
+        Scanner in = new Scanner(System.in);
+        //С помощью регулярных выражений ограничиваем необходимые параметры ввода номера
+        inString="";
+        while (inString.matches("[0-9]{3,3}") == false)
+        {
+            System.out.println("Введите первые три цифры номера:");
+            inString = in.next();
+        }
+        //Далее из полученных вводимых цифр "соберем" нужный номер телефона в формате +...-..-...-....
+        newPhoneNumber = "+"+inString;
+        inString="";
+        while (inString.matches("[0-9]{2,2}") == false)
+        {
+            System.out.println("Введите следующие две цифры номера:");
+            inString = in.next();
+        }
+        newPhoneNumber = newPhoneNumber+"-"+inString;
+        inString="";
+        while (inString.matches("[0-9]{3,3}") == false)
+        {
+            System.out.println("Введите следующие три цифры номера:");
+            inString = in.next();
+        }
+        newPhoneNumber = newPhoneNumber+"-"+inString;
+        while (inString.matches("[0-9]{4,4}") == false)
+        {
+            System.out.println("Введите последние четыре цифры номера:");
+            inString = in.next();
+        }
+        newPhoneNumber = newPhoneNumber+"-"+inString;
+        //Возвращаем полученный телефонный номер
+        return newPhoneNumber;
+    }
+
+    //Создадим метод, редактирущий информацию об абоненте
+    public static boolean subscriberEdit(Subscriber subs)
+    {
+        //Инициализируем переменную-флаг, отвечающую за какое-либо изменение данных абонента
+        boolean isEdit=false;
         //Cоздаём объект класса Scanner для обработки ввода с клавиатуры и переменную inString для обработки запросов
         Scanner in = new Scanner(System.in);
         String inString;
         //Создаем объект класса Calendar для работы с датами
         Calendar calendar = null;
         //Организовываем диалог с пользователем и изменяем нужные ему данные в полях абонента
-        System.out.println("\nФ.И.О.- "+subs.fio);
-        System.out.println("\nРедактируем Ф.И.О.? Введите 'да' или любой другой символ,если нет\n");
+        System.out.println("Ф.И.О.- "+subs.fio);
+        System.out.println("Редактируем Ф.И.О.? Введите 'да' или любой другой символ,если нет");
         inString = in.next();
         if (inString.equals("да"))
             {
@@ -109,7 +151,7 @@ public class Subscriber
                 subs.setFio(inString);
             }
         System.out.println("Дата рождения - "+subs.dateBirth);
-        System.out.println("\nРедактируем дату рождения абонента? Введите 'да' или любой другой символ,если нет\n");
+        System.out.println("Редактируем дату рождения абонента? Введите 'да' или любой другой символ,если нет");
         inString = in.next();
         if (inString.equals("да"))
         {
@@ -123,15 +165,65 @@ public class Subscriber
             calendar = Calendar.getInstance();
             calendar.set(year, (month-1), date,0,0,0);
             subs.setDateBirth(calendar.getTime());
+            isEdit=true;
         }
-        int i=0;
-        for (String p: subs.phoneNumber)
+
+        for (int i=0;i<subs.phoneNumber.size();i++)
         {
-            i++;
-            System.out.println("Телефон №"+i+":"+p);
+            System.out.println("Телефон №"+(i+1)+":"+subs.phoneNumber.get(i));
+            System.out.println("'1'-редактировать этот номер телефона;'2'-удалить этот номер;'3'-пропустить этот шаг");
+            inString="";
+            while (inString.equals("1")==false&&inString.equals("2")==false&&inString.equals("3")==false)
+            {
+                inString = in.next();
+                if (inString.equals("1"))
+                {
+                    //Вызываем метод ввода нового номера телефона и перезаписываем его в нужный элемент списка телефонов
+                    subs.phoneNumber.set(i,inputNewPhoneNumber());
+                    System.out.println("Добавлен новый телефон абонента:"+subs.phoneNumber.get(i));
+                    isEdit=true;
+                    //Переходим на следующий шаг
+                    inString="3";
+                }
+                else
+                {
+                    if (inString.equals("2"))
+                        {
+                            System.out.println("Этот номер телефона будет удален!\n" +
+                                    "Вы уверены('да' - удалить без возможности восстановления)?");
+                            inString = in.next();
+                            //Если пользователь подтвердил действие, проводим удаление
+                            if (inString.equals("да")) subs.phoneNumber.remove(i);
+                            i=i-1;
+                            isEdit=true;
+                            System.out.println("Номер телефона удален!");
+                            //Переходим на следующий шаг
+                            inString="3";
+                        }
+                    if (inString.equals("3")==false)
+                    {
+                        System.out.println("Повторите ввод!('1','2'или'3')");
+                    }
+                }
+            }
         }
+        //Если пользователь хочет ввести дополнительный телефон, даем ему такую возможность
+        inString ="да";
+        while (inString.equals("да")==true)
+        {
+            System.out.println("Добавить ещё один номер телефона? Введите 'да' или любой другой символ,если нет");
+            inString = in.next();
+            if (inString.equals("да"))
+                {
+                    subs.phoneNumber.add(inputNewPhoneNumber());
+                    System.out.println("Добавлен новый телефон абонента:"+subs.phoneNumber.get((subs.phoneNumber.size()-1)));
+                    isEdit=true;
+                }
+
+        }
+        //Если пользователь хочет изменить адрес абонента, даем ему такую возможность
         System.out.println("Адрес:"+subs.address);
-        System.out.println("\nРедактируем адрес абонента? Введите 'да' или любой другой символ,если нет\n");
+        System.out.println("Редактируем адрес абонента? Введите 'да' или любой другой символ,если нет");
         inString = in.next();
         if (inString.equals("да"))
         {
@@ -143,16 +235,16 @@ public class Subscriber
             System.out.println("Введите дом/квартиру проживания абонента:");
             inString+= in.next();
             subs.setAddress(inString);
+            isEdit=true;
+        }
+        //Если произошло редактирование данных абонента, обновляем поле даты и времени модификации записи абонента
+        if (isEdit==true)
+        {
+            calendar = Calendar.getInstance();
+            subs.setDateIni(calendar.getTime());
         }
 
-
-        //Обновляем дату и время модификации записи абонента
-        calendar = Calendar.getInstance();
-        subs.setDateIni(calendar.getTime());
-        System.out.println("Дата создания/модификации данных абонента:"+subs.dateIni);
-
-        //Здесь нужно вызвать упорядочинивание???
-
+        return isEdit;
     }
 
 }

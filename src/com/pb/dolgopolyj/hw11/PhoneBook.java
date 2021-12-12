@@ -58,11 +58,24 @@ public class PhoneBook extends Subscriber
         Subscriber subs3= new Subscriber("Баглаенко Виктория Николаевна", dateBirth, phoneNumber3,
                 "г.Пловдив, ул.Горно Броди, 3/6");
 
+        calendar.set(1953, 4, 19,0,0,0);
+        dateBirth=calendar.getTime();
+
+        List<String> phoneNumber4 = new ArrayList<>();
+        phoneNumber4.add("+380-99-038-8753");
+
+        Subscriber subs4= new Subscriber("Долгополый Юрий Петрович", dateBirth, phoneNumber4,
+                "г.Изюм, ул.Рыночная, 8/76");
+
+        PersonFioComparator pcomp = new PersonFioComparator();
         //Создаем коллекцию для хранения в ней всех абонентов
         List<Subscriber> phoneBook = new ArrayList<>();
         phoneBook.add(subs1);
         phoneBook.add(subs2);
         phoneBook.add(subs3);
+        phoneBook.add(subs4);
+        //Вызываем сортировку по полю Ф.И.О.
+        phoneBook.sort(pcomp);
 
         //Здесь, возможно, нужно будет отсортировать нашу коллекцию сортом с компаратором)
 
@@ -97,9 +110,14 @@ public class PhoneBook extends Subscriber
                             sign = in.next();
                             if (sign.equals("1"))
                             {
-                                subscriberEdit(phoneBook.get(a - 1));
+                                if (subscriberEdit(phoneBook.get(a - 1))==true)
+                                {
                                 System.out.println("Теперь данные этого абонента выглядят так:");
                                 subscriberInfo(phoneBook.get(a - 1));
+                                //Поскольку произошло редактирование какого-то абонента, пересортировываем
+                                // нашу телефонную книгу по первоначальному алгоритму (Ф.И.О.)
+                                phoneBook.sort(pcomp);
+                                }
                                 exit2 = true;
                             }
                             else
@@ -109,7 +127,12 @@ public class PhoneBook extends Subscriber
                                     System.out.println("Данные по абоненту будут удалены!\n" +
                                             "Вы уверены('да' - удалить без возможности восстановления)?");
                                     sign = in.next();
-                                    if (sign.equals("да")) phoneBook.remove((a-1));
+                                    //Если пользователь подтвердил действие, проводим удаление
+                                    if (sign.equals("да"))
+                                    {
+                                        System.out.println("Данные по абоненту удалены!");
+                                        phoneBook.remove((a-1));
+                                    }
                                     exit2 = true;
                                 }
                                 else
@@ -145,6 +168,14 @@ public class PhoneBook extends Subscriber
             System.out.println("№"+i+":"+p.getFio());
         }
 
+    }
+
+    //Создадим класс PersonFioComparator, для сортировки нашей коллекции объектов абонентов
+    static class PersonFioComparator implements Comparator<Subscriber> {
+
+        public int compare(Subscriber a, Subscriber b) {
+            return a.getFio().compareTo(b.getFio());
+        }
     }
 
 }
