@@ -96,7 +96,7 @@ public class Subscriber
         inString="";
         while (inString.matches("[0-9]{3,3}") == false)
         {
-            System.out.println("Введите первые три цифры номера:");
+            System.out.print("Введите первые три цифры номера:");
             inString = in.next();
         }
         //Далее из полученных вводимых цифр "соберем" нужный номер телефона в формате +...-..-...-....
@@ -104,20 +104,20 @@ public class Subscriber
         inString="";
         while (inString.matches("[0-9]{2,2}") == false)
         {
-            System.out.println("Введите следующие две цифры номера:");
+            System.out.print("Введите следующие две цифры номера:");
             inString = in.next();
         }
         newPhoneNumber = newPhoneNumber+"-"+inString;
         inString="";
         while (inString.matches("[0-9]{3,3}") == false)
         {
-            System.out.println("Введите следующие три цифры номера:");
+            System.out.print("Введите следующие три цифры номера:");
             inString = in.next();
         }
         newPhoneNumber = newPhoneNumber+"-"+inString;
         while (inString.matches("[0-9]{4,4}") == false)
         {
-            System.out.println("Введите последние четыре цифры номера:");
+            System.out.print("Введите последние четыре цифры номера:");
             inString = in.next();
         }
         newPhoneNumber = newPhoneNumber+"-"+inString;
@@ -142,13 +142,14 @@ public class Subscriber
         if (inString.equals("да"))
             {
                 inString="";
-                System.out.println("Введите фамилию абонента:");
+                System.out.print("Введите фамилию абонента:");
                 inString += in.next()+" ";
-                System.out.println("Введите имя абонента:");
+                System.out.print("Введите имя абонента:");
                 inString+= in.next()+" ";
-                System.out.println("Введите отчество абонента:");
+                System.out.print("Введите отчество абонента:");
                 inString+= in.next();
                 subs.setFio(inString);
+                isEdit=true;
             }
         System.out.println("Дата рождения - "+subs.dateBirth);
         System.out.println("Редактируем дату рождения абонента? Введите 'да' или любой другой символ,если нет");
@@ -156,11 +157,11 @@ public class Subscriber
         if (inString.equals("да"))
         {
             int year, month, date;
-            System.out.println("Введите год рождения абонента:");
+            System.out.print("Введите год рождения абонента:");
             year= Integer.parseInt(in.next());
-            System.out.println("Введите месяц рождения абонента(1-12):");
+            System.out.print("Введите месяц рождения абонента(1-12):");
             month= Integer.parseInt(in.next());
-            System.out.println("Введите день рождения абонента(1-31):");
+            System.out.print("Введите день рождения абонента(1-31):");
             date= Integer.parseInt(in.next());
             calendar = Calendar.getInstance();
             calendar.set(year, (month-1), date,0,0,0);
@@ -227,12 +228,15 @@ public class Subscriber
         inString = in.next();
         if (inString.equals("да"))
         {
+            //Поскольку название города и/или улицы может содержать несколько слов, нужно применить построковый ввод
+            in.nextLine();
             inString="г.";
-            System.out.println("Введите город проживания абонента:");
-            inString += in.next()+", ул.";
-            System.out.println("Введите улицу проживания абонента:");
-            inString+= in.next()+", д.";
-            System.out.println("Введите дом/квартиру проживания абонента:");
+            System.out.print("Введите город проживания абонента:");
+            inString += in.nextLine()+", ул.";
+            //Поскольку название города и/или улицы может содержать несколько слов, разде
+            System.out.print("Введите улицу проживания абонента:");
+            inString+= in.nextLine()+", д.";
+            System.out.print("Введите дом/квартиру проживания абонента:");
             inString+= in.next();
             subs.setAddress(inString);
             isEdit=true;

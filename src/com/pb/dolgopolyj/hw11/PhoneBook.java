@@ -105,7 +105,7 @@ public class PhoneBook extends Subscriber
                         System.out.println("Что необходимо сделать?\n" +
                                 "'1'-редактировать данные абонента;\n" +
                                 "'2'-удалить данные этого абонента из телефонной книги\n" +
-                                "'3' - выход из меню");
+                                "'3'-выход из меню");
                         while (exit2!=true) {
                             sign = in.next();
                             if (sign.equals("1"))
