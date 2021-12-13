@@ -1,19 +1,25 @@
 package com.pb.dolgopolyj.hw11;
 
 //Импортируем для работы с датами дополнительные библиотеки
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
  * Класс PhoneBook, который организовывает работу с телефонной книгой.
  */
-public class PhoneBook extends Subscriber
+public class PhoneBook extends Subscriber implements Serializable
 {
+    //Для организации сериалиазации объектов класса установим номер своей версии
+    private final static long serialVersionUID = 75;
+
     public PhoneBook(String fio, Date dateBirth, List phoneNumber, String address)
     {
         super(fio, dateBirth, phoneNumber, address);
     }
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws Exception
     {
         //Cоздаём объект класса Scanner для обработки ввода с клавиатуры
         Scanner in = new Scanner(System.in);
@@ -70,87 +76,32 @@ public class PhoneBook extends Subscriber
         PersonFioComparator pcomp = new PersonFioComparator();
         //Создаем коллекцию для хранения в ней всех абонентов
         List<Subscriber> phoneBook = new ArrayList<>();
+        //Загружаем телефонную книгу из файла
+        //phoneBook=deserializationPhoneBook();
         phoneBook.add(subs1);
         phoneBook.add(subs2);
         phoneBook.add(subs3);
         phoneBook.add(subs4);
-        //Вызываем сортировку по полю Ф.И.О.
-        phoneBook.sort(pcomp);
 
-        //Здесь, возможно, нужно будет отсортировать нашу коллекцию сортом с компаратором)
+        //Вызываем сортировку по полю Ф.И.О.
+       // phoneBook.sort(pcomp);
 
         //Выводим информацию обо всех абонентах телефонной книги
         phoneBookShowInfo(phoneBook);
-        //Запрашиваем, хочет ли пользователь просмотреть/изменить информацию об абоненте
-        System.out.println("Если хотите просмотреть/изменить информацию об абоненте, введите его номер, в противном случае введите любой другой символ");
-        String sign = in.next();
-        if (sign.matches("[0-9]+") == true)
-        {
-            int a = Integer.parseInt(sign);
-            if (a > phoneBook.size() || (a - 1) < 0)
-                {
-                System.out.println("Выбрана операция по несуществующему абоненту!!!");
-                }
-            else
-                {
-                System.out.println("Выбрана операция по абоненту №" + a);
-                subscriberInfo(phoneBook.get(a - 1));
-                System.out.println("\nЕсли хотите изменить/удалить информацию об абоненте, введите 'да',\n"
-                        +"в противном случае любой другой символ");
-                    sign = in.next();
-                    if (sign.equals("да"))
-                    {
-                        //Назначаем флаг для выхода из меню
-                        exit2=false;
-                        System.out.println("Что необходимо сделать?\n" +
-                                "'1'-редактировать данные абонента;\n" +
-                                "'2'-удалить данные этого абонента из телефонной книги\n" +
-                                "'3'-выход из меню");
-                        while (exit2!=true) {
-                            sign = in.next();
-                            if (sign.equals("1"))
-                            {
-                                if (subscriberEdit(phoneBook.get(a - 1))==true)
-                                {
-                                System.out.println("Теперь данные этого абонента выглядят так:");
-                                subscriberInfo(phoneBook.get(a - 1));
-                                //Поскольку произошло редактирование какого-то абонента, пересортировываем
-                                // нашу телефонную книгу по первоначальному алгоритму (Ф.И.О.)
-                                phoneBook.sort(pcomp);
-                                }
-                                exit2 = true;
-                            }
-                            else
-                            {
-                                if (sign.equals("2"))
-                                {
-                                    System.out.println("Данные по абоненту будут удалены!\n" +
-                                            "Вы уверены('да' - удалить без возможности восстановления)?");
-                                    sign = in.next();
-                                    //Если пользователь подтвердил действие, проводим удаление
-                                    if (sign.equals("да"))
-                                    {
-                                        System.out.println("Данные по абоненту удалены!");
-                                        phoneBook.remove((a-1));
-                                    }
-                                    exit2 = true;
-                                }
-                                else
-                                {
-                                    if (sign.equals("3")) exit2 = true;
-                                    System.out.println("Повторите ввод!('1','2' или '3')");
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        System.out.println("Выбран выход из меню!");
-                    }
-                }
-        }
+
+
+        //Организовываем вывод основного меню
+
+//        phoneBook.add(subscriberNew());
+//        phoneBook.sort(pcomp);
+
+        //FindSubscriber(phoneBook);
+
 
         phoneBookShowInfo(phoneBook);
+
+        //Сохраним нашу телефонную книгу в файл
+        serializationPhoneBook(phoneBook);
 
         //Благодарности :)
         System.out.println("\n*** Cпасибо за использование нашей 'PhoneBook'!!! ***");
@@ -170,11 +121,168 @@ public class PhoneBook extends Subscriber
 
     }
 
-    //Создадим класс PersonFioComparator, для сортировки нашей коллекции объектов абонентов
+    //Создадим метод, выводящий на экран информацию об абонентах, содержащихся в телефонной книге.
+    //При необходимости, метод позволяет внести изменения в данные абонента
+    static void phoneBookInfoEdit(List<Subscriber> phoneBook,PersonFioComparator pcomp)
+    {
+        //Cоздаём объект класса Scanner для обработки ввода с клавиатуры
+        Scanner in = new Scanner(System.in);
+        //Назначаем флаги для выходов из меню
+        boolean exit1,exit2;
+        //Выводим информацию обо всех абонентах телефонной книги
+        phoneBookShowInfo(phoneBook);
+        //Запрашиваем, хочет ли пользователь просмотреть/изменить информацию об абоненте
+        exit1=false;
+        System.out.println("Что бы просмотреть/изменить информацию об абоненте, введите его номер, в противном случае введите любой другой символ");
+        while (exit1==false)
+        {
+            String sign = in.next();
+            if (sign.matches("[0-9]+") == true)
+            {
+                int a = Integer.parseInt(sign);
+                if (a > phoneBook.size() || (a - 1) < 0) {
+                    System.out.println("Выбрана операция по несуществующему абоненту!!!");
+                } else {
+                    System.out.println("Выбрана операция по абоненту №" + a);
+                    subscriberInfo(phoneBook.get(a - 1));
+                    System.out.println("\nЕсли хотите изменить/удалить информацию об абоненте, введите 'да',\n"
+                            + "в противном случае любой другой символ");
+                    sign = in.next();
+                    if (sign.equals("да"))
+                    {
+                        //Назначаем флаг для выхода из меню
+                        exit2 = false;
+                        System.out.println("Что необходимо сделать?\n" +
+                                "'1'-редактировать данные абонента;\n" +
+                                "'2'-удалить данные этого абонента из телефонной книги\n" +
+                                "'3'-выход из меню");
+                        while (exit2 != true)
+                        {
+                            sign = in.next();
+                            if (sign.equals("1"))
+                            {
+                                if (subscriberEdit(phoneBook.get(a - 1)) == true)
+                                {
+                                    System.out.println("Теперь данные этого абонента выглядят так:");
+                                    subscriberInfo(phoneBook.get(a - 1));
+                                    //Поскольку произошло редактирование какого-то абонента, пересортировываем
+                                    // нашу телефонную книгу по первоначальному алгоритму (Ф.И.О.) и выходим
+                                    phoneBook.sort(pcomp);
+                                }
+                                exit1=true;
+                                exit2=true;
+                            } else
+                            {
+                                if (sign.equals("2")) {
+                                    System.out.println("Данные по абоненту будут удалены!\n" +
+                                            "Вы уверены('да' - удалить без возможности восстановления)?");
+                                    sign = in.next();
+                                    //Если пользователь подтвердил действие, проводим удаление и выходим
+                                    if (sign.equals("да")) {
+                                        System.out.println("Данные по абоненту удалены!");
+                                        phoneBook.remove((a - 1));
+                                    }
+                                    exit1=true;
+                                    exit2=true;
+                                } else
+                                    {
+                                        if (sign.equals("3"))
+                                        { exit1=true; exit2=true;}
+                                        else
+                                        {
+                                        System.out.println("Повторите ввод!('1','2' или '3')");
+                                        }
+                                    }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        exit1 = true;
+                    }
+                }
+            }
+            else
+            {
+                exit1 = true;
+            }
+        }
+    }
+
+    //Создадим класс PersonFioComparator, для сортировки нашей коллекции объектов абонентов по полю Ф.И.О.
     static class PersonFioComparator implements Comparator<Subscriber> {
 
         public int compare(Subscriber a, Subscriber b) {
             return a.getFio().compareTo(b.getFio());
+        }
+    }
+
+    //Создадим метод, сохраняющий в файл объект нашего класса
+    static void serializationPhoneBook (List<Subscriber> phoneBook) throws Exception
+    {
+        // Рабочий файл программы будем хранить в папке нашего домашнего задания
+        File file = Paths.get("out\\production\\JavaHomeWork\\com\\pb\\dolgopolyj\\hw11\\phoneBook.data").toFile();
+        FileOutputStream outputStream = new FileOutputStream(file);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+
+        // сохраняем в файл нашу телефонную книгу
+        objectOutputStream.writeObject(phoneBook);
+        System.out.println("Телефонная книга сохранена в файл:"+file.getPath());
+        //закрываем поток и освобождаем ресурсы
+        objectOutputStream.close();
+
+    }
+
+    //Создадим метод, загружающий ранее сохраненную телефонную книгу из файла в объект нашего класса List<Subscriber>
+    static List<Subscriber> deserializationPhoneBook () throws Exception
+    {
+        // Рабочий файл программы хранитcя в папке нашего домашнего задания
+        File file = Paths.get("out\\production\\JavaHomeWork\\com\\pb\\dolgopolyj\\hw11\\phoneBook.data").toFile();
+        FileInputStream fileInputStream = new FileInputStream(file);
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        // Загружаем файл и приводим его к формату нашего листа телефонной книги
+        List<Subscriber> phoneBook = (List<Subscriber>) objectInputStream.readObject();
+        System.out.println("Телефонная книга загружена из файла:"+file.getPath());
+        //закрываем поток и освобождаем ресурсы
+        objectInputStream.close();
+        return phoneBook;
+    }
+
+    ////Создадим метод, осуществляющий поиск абонента телефонной книги по Ф.И.О.
+    static void FindSubscriber(List<Subscriber> phoneBook)
+    {
+        //Cоздаём объект класса Scanner для обработки ввода с клавиатуры
+        Scanner in = new Scanner(System.in);
+        String inString,inString2;
+        int index;
+        inString2 ="да";
+        while (inString2.equals("да")==true) {
+            //Переменная, отвественная за нахождение совпадения
+            boolean isСoincidence = false;
+            System.out.println("\nВы выбрали функцию поиска абонента. Поиск будет осуществлен по всем полям Ф.И.О. телефонной книги.");
+            System.out.println("В качестве результата Вы получите полную информацию по всем абонентам,");
+            System.out.println("которые в указанном поле будут содержать введенную Вами строку. То есть, например,");
+            System.out.println("введя только имя абонента, вы получите список всех абонентов с этим именем и т.п.");
+            System.out.print("Введите Ф.И.О. абонента (в качестве разделителя используйте пробелы):");
+            //Для сравнения строк приведем их к верхнему регистру
+            inString = in.nextLine().toUpperCase(Locale.ROOT);
+            for (int i = 0; i < phoneBook.size(); i++) {
+                index = phoneBook.get(i).getFio().toUpperCase(Locale.ROOT).lastIndexOf(inString);
+                if (index == -1) {
+                    //Нужная подстрока не найдена
+                } else {
+                    //Найдено совпадение, выводим информацию об абоненте и обновляем значение флага isСoincidence
+                    subscriberInfo(phoneBook.get(i));
+                    isСoincidence = true;
+                }
+            }
+            if (isСoincidence == false) {
+                System.out.println("По введенным данным абонентов не найдено!");
+            }
+            System.out.println("Повторить поиск(введите 'да' или любой другой символ,если нет)?");
+
+            inString2 = in.next();
+            in.nextLine();
         }
     }
 

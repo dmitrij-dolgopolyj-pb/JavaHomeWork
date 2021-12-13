@@ -1,16 +1,14 @@
 package com.pb.dolgopolyj.hw11;
 
 //Импортируем для работы с датами дополнительные библиотеки
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * Класс Subscriber, который организовывает работу по хранинию и обработке данных
  * одного абонента из телефонной книгой.
  */
-public class Subscriber
+public class Subscriber implements Serializable
 {
     //Описывем поля нашего класса
 
@@ -125,7 +123,7 @@ public class Subscriber
         return newPhoneNumber;
     }
 
-    //Создадим метод, редактирущий информацию об абоненте
+    //Создадим метод, редактирущий информацию об абоненте (в случае проведения редактирования возвращает "true")
     public static boolean subscriberEdit(Subscriber subs)
     {
         //Инициализируем переменную-флаг, отвечающую за какое-либо изменение данных абонента
@@ -249,6 +247,71 @@ public class Subscriber
         }
 
         return isEdit;
+    }
+
+    //Создадим метод, организовывающий ввод пользователем нового абонента
+    public static Subscriber subscriberNew()
+    {
+        //Объявляем переменные - будущие поля для нашего абонента
+        //Фамилия, имя и отчество
+        String fio;
+        //Дата рождения
+        Date dateBirth;
+        //Телефон абонента
+        List<String> phoneNumber=new ArrayList<>();
+        //Адрес абонента
+        String address;
+        //Cоздаём объект класса Scanner для обработки ввода с клавиатуры и переменную inString для обработки запросов
+        Scanner in = new Scanner(System.in);
+        String inString;
+        //Создаем объект класса Calendar для работы с датами
+        Calendar calendar = null;
+        //Организовываем диалог с пользователем и получаем данные для полей абонента
+        fio="";
+        System.out.print("Введите фамилию абонента:");
+        fio += in.next()+" ";
+        System.out.print("Введите имя абонента:");
+        fio+= in.next()+" ";
+        System.out.print("Введите отчество абонента:");
+        fio+= in.next();
+
+        int year, month, date;
+        System.out.print("Введите год рождения абонента:");
+        year= Integer.parseInt(in.next());
+        System.out.print("Введите месяц рождения абонента(1-12):");
+        month= Integer.parseInt(in.next());
+        System.out.print("Введите день рождения абонента(1-31):");
+        date= Integer.parseInt(in.next());
+        calendar = Calendar.getInstance();
+        calendar.set(year, (month-1), date,0,0,0);
+        dateBirth=calendar.getTime();
+
+        //Предлагаем пользователю ввести номер(а) телефона(ов) абонента
+        inString ="да";
+        while (inString.equals("да")==true)
+        {
+            System.out.println("Если хотите добавить номер телефона абонента, введите 'да' или любой другой символ,если нет");
+            inString = in.next();
+            if (inString.equals("да"))
+            {
+                phoneNumber.add(inputNewPhoneNumber());
+                System.out.println("Добавлен новый телефон абонента:"+phoneNumber.get((phoneNumber.size()-1)));
+            }
+        }
+        //Поскольку название города и/или улицы может содержать несколько слов, нужно применить построковый ввод
+        in.nextLine();
+        address="г.";
+        System.out.print("Введите город проживания абонента:");
+        address += in.nextLine()+", ул.";
+        //Поскольку название города и/или улицы может содержать несколько слов, разде
+        System.out.print("Введите улицу проживания абонента:");
+        address+= in.nextLine()+", д.";
+        System.out.print("Введите дом/квартиру проживания абонента:");
+        address+= in.next();
+        //Вызываем конструктор объекта
+        Subscriber subs= new Subscriber(fio, dateBirth, phoneNumber, address);
+        //Возвращаем созданный объект
+        return subs;
     }
 
 }
