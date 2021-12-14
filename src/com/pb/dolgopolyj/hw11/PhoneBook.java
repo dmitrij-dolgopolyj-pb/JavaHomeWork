@@ -23,6 +23,8 @@ public class PhoneBook extends Subscriber implements Serializable
     {
         //Cоздаём объект класса Scanner для обработки ввода с клавиатуры
         Scanner in = new Scanner(System.in);
+        //Cоздаём переменную для ввода строки с клавиатуры
+        String inputString="";
         //Назначаем флаги для выходов из меню
         boolean exit1,exit2;
         //Инициализирум два компаратора - один для сортировки по Ф.И.О.
@@ -31,139 +33,174 @@ public class PhoneBook extends Subscriber implements Serializable
         PersonAdressComparator pcomp2 = new PersonAdressComparator();
         //Инициализируем флаг, отвечающий за текущий порядок сортировки
         boolean isSortFio=true;
-        //Выводим на экран приветствие программы и выполняемые ей действия
-        System.out.println("*** Добрый день! ***\nВас приветствует 'PhoneBook'!!!");
-        System.out.println("Вы сможете работать с нашей телефонной книгой в удобном для Вас режиме.");
-
-        //Создаем объекты класса Subscriber (абонента телефонной книги)
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(1975, 8, 8,0,0,0);
-        Date dateBirth=calendar.getTime();
-
-        List<String> phoneNumber = new ArrayList<>();
-        phoneNumber.add("+380-50-883-9418");
-        phoneNumber.add("+380-66-999-1234");
-        phoneNumber.add("+380-93-888-5678");
-
-        Subscriber subs1= new Subscriber("Долгополый Дмитрий Юрьевич", dateBirth, phoneNumber,
-                "г.Краматорск, бул.Краматорский 2/262");
-
-        calendar.set(1983, 6, 1,0,0,0);
-        dateBirth=calendar.getTime();
-
-        List<String> phoneNumber2 = new ArrayList<>();
-        phoneNumber2.add("+380-99-044-6050");
-        phoneNumber2.add("+380-63-222-4189");
-
-        Subscriber subs2= new Subscriber("Буц Наталья Юрьевна", dateBirth, phoneNumber2,
-                "г.Изюм, ул.Харьковская 35");
-
-        calendar.set(1962, 3, 13,0,0,0);
-        dateBirth=calendar.getTime();
-
-        List<String> phoneNumber3 = new ArrayList<>();
-        phoneNumber3.add("+359-89-843-3510");
-        phoneNumber3.add("+359-23-666-4189");
-        phoneNumber3.add("+359-59-555-1894");
-        phoneNumber3.add("+359-13-444-4189");
-
-        Subscriber subs3= new Subscriber("Баглаенко Виктория Николаевна", dateBirth, phoneNumber3,
-                "г.Пловдив, ул.Горно Броди, 3/6");
-
-        calendar.set(1953, 4, 19,0,0,0);
-        dateBirth=calendar.getTime();
-
-        List<String> phoneNumber4 = new ArrayList<>();
-        phoneNumber4.add("+380-99-038-8753");
-
-        Subscriber subs4= new Subscriber("Долгополый Юрий Петрович", dateBirth, phoneNumber4,
-                "г.Изюм, ул.Рыночная, 8/76");
-
         //Создаем коллекцию для хранения в ней всех абонентов
         List<Subscriber> phoneBook = new ArrayList<>();
+
+        //Выводим на экран приветствие программы и выполняемые ей действия
+        System.out.println("**************************************** Добрый день! ********************************************\n");
+        System.out.println("***************************Вас приветствует программа 'PhoneBook'!!!******************************\n");
+        System.out.println("Вы сможете работать с нашей телефонной книгой в удобном для Вас режиме.");
+        System.out.println("При выводе списка абонентов они сортируются в алфавитном порядке по Ф.И.О. или адресу.");
+        System.out.println("Способ переключения сортировки указан в меню.");
+        System.out.println("Удачной и приятной работы!\n");
+
         //Загружаем телефонную книгу из файла
-        //phoneBook=deserializationPhoneBook();
-        phoneBook.add(subs1);
-        phoneBook.add(subs2);
-        phoneBook.add(subs3);
-        phoneBook.add(subs4);
+        phoneBook=deserializationPhoneBook();
 
         //Cортируем коллекцию, в зависимости от текущей настройки флага сортировки
         if (isSortFio==true) phoneBook.sort(pcomp1);
         else phoneBook.sort(pcomp2);
 
-        //Выводим краткую информацию обо всех абонентах телефонной книги
-        //phoneBookShowShortInfo(phoneBook);
+        //Работаем в программе, пока пользователь не даст команду на выход из программы
+        while (inputString.equals("в")!=true)
+        {
+            //Выводим краткую информацию обо всех абонентах телефонной книги
+            phoneBookShowShortInfo(phoneBook);
 
-        //Выводим полную информацию обо всех абонентах телефонной книги
-        phoneBookShowFullInfo(phoneBook);
+            //Организовываем вывод основного меню
+            phoneBookShowMenu(phoneBook.size());
 
-        //Организовываем вывод основного меню
+            System.out.print("\nВведите символы нужного действия->");
+            //Ждем ввода необходимого действия от пользователя
+            inputString = in.next();
 
-//        phoneBook.add(subscriberNew());
-//        phoneBook.sort(pcomp);
+            //Если введено число, отрабатываем блок просмотра и редактирования данных абонента
+            if (inputString.matches("[0-9]+") == true)
+            {
+                if (phoneBookInfoEdit(phoneBook, inputString)==true)
+                {
+                    //Произошло редактирование данных абонента, вызываем сортировку на текущих настройках
+                    if (isSortFio==true) phoneBook.sort(pcomp1);
+                    else phoneBook.sort(pcomp2);
+                }
+            }
 
-        //FindSubscriber(phoneBook);
+            //Если пользователь хочет добавить нового абонента, вызываем соответствующий метод
+            if (inputString.equals("д")==true)
+            {
+                phoneBook.add(subscriberNew());
+                //Cортируем коллекцию, в зависимости от текущей настройки флага сортировки
+                if (isSortFio==true) phoneBook.sort(pcomp1);
+                else phoneBook.sort(pcomp2);
+            }
 
+            //Если пользователь хочет получить полную информацию обо всех абонентах, выводим всю телефонную книгу
+            if (inputString.equals("и")==true)
+            {
+                //Выводим полную информацию обо всех абонентах телефонной книги
+                phoneBookShowFullInfo(phoneBook);
+            }
 
-        //phoneBookShowInfo(phoneBook);
+            //Если пользователь хочет изменить порядок сортировки записей, делаем нужные действия
+            if (inputString.equals("с")==true)
+            {
+                //Изменяем флаг сортировки на противоположный
+                if (isSortFio==true) isSortFio=false;
+                else isSortFio=true;
+                //Cортируем коллекцию, в зависимости от текущей настройки флага сортировки
+                if (isSortFio==true) phoneBook.sort(pcomp1);
+                else phoneBook.sort(pcomp2);
+            }
+
+            //Если пользователь хочет найти абонента, вызываем метод такого поиска
+            if (inputString.equals("п")==true)
+            {
+                //Вызываем метод поиска абонента телефонной книги
+                FindSubscriber(phoneBook);
+            }
+
+        }
 
         //Сохраним нашу телефонную книгу в файл
         serializationPhoneBook(phoneBook);
 
         //Благодарности :)
-        System.out.println("\n*** Cпасибо за использование нашей 'PhoneBook'!!! ***");
+        System.out.println("\n************************** Cпасибо за использование нашей 'PhoneBook'!!! *******************************");
 
+    }
+
+    //Создадим метод, выводящий на экран основное меню программы (аргументом метод получает размер телефонной книги)
+    static void phoneBookShowMenu(int phoneBookSize)
+    {
+        //Объявляем переменные, для вывода на экран первого и последнего номера абонента в телофонной книге
+        String startElement="-",endElement="-";
+        if (phoneBookSize>0)
+        {
+            startElement="1";
+            endElement=String.valueOf(phoneBookSize);
+        }
+        System.out.println("\n----------------------------------------МЕНЮ ПРОГРАММЫ-------------------------------------------");
+        System.out.println("    '"+startElement+"'..'"+endElement+"'           'д'             'и'             'с'            'п'             'в'");
+        System.out.println("    Просмотр/        Добавить        Вывести         Сменить         Поиск           Выход");
+        System.out.println(" редактирование      абонента          всю           порядок        абонента           из");
+        System.out.println(" данных абонента                    информацию      сортировки                      программы");
     }
 
     //Создадим метод, выводящий на экран краткую информацию обо всех абонентах, содержащихся в телефонной книге
     static void phoneBookShowShortInfo(List<Subscriber> phoneBook)
     {
-        System.out.println("\nВ нашей телефонной книге хранится информация о следующих абонентах:");
-        int i = 0;
-        for (Subscriber p: phoneBook)
+        if (phoneBook.size()>0)
         {
-          i+=1;
-          System.out.println("№"+i+":"+p.getFio()+", тел."+p.getPhoneNumber().get(0)+"; адрес:"+p.getAddress());
+            System.out.println("\n----------------------------------------ТЕЛЕФОННАЯ КНИГА-----------------------------------------\n");
+            int i = 0;
+            for (Subscriber p : phoneBook) {
+                i += 1;
+                System.out.println("№" + i + ":" + p.getFio() + ", тел." + p.getPhoneNumber().get(0) + "; адрес:" + p.getAddress());
+            }
+        }
+        else
+        {
+            System.out.println("\nВ нашей телефонной книге пока нет абонентов. Добавьте их!");
         }
     }
 
     //Создадим метод, выводящий на экран полную информацию обо всех абонентах, содержащихся в телефонной книге
     static void phoneBookShowFullInfo(List<Subscriber> phoneBook)
     {
-        System.out.println("\nВ нашей телефонной книге хранится информация о следующих абонентах:");
-        int i = 0;
-        for (Subscriber p: phoneBook)
+        if (phoneBook.size()>0)
         {
-            i+=1;
-            System.out.println("-------------------АБОНЕНТ №"+i+"----------------------------------------------------");
-            subscriberInfo(p);;
-            System.out.println("---------------------------------------------------------------------------------");
+            System.out.println("\nВ нашей телефонной книге хранится информация о следующих абонентах:");
+            int i = 0;
+            for (Subscriber p : phoneBook) {
+                i += 1;
+                System.out.println("-------------------АБОНЕНТ №" + i + "----------------------------------------------------");
+                subscriberInfo(p);
+                ;
+                System.out.println("---------------------------------------------------------------------------------");
+            }
+        }
+        else
+        {
+            System.out.println("\nВ нашей телефонной книге пока нет абонентов. Добавьте их!");
         }
     }
 
     //Создадим метод, выводящий на экран информацию об абонентах, содержащихся в телефонной книге.
     //При необходимости, метод позволяет внести изменения в данные абонента
-    static void phoneBookInfoEdit(List<Subscriber> phoneBook,PersonFioComparator pcomp)
+    static boolean phoneBookInfoEdit(List<Subscriber> phoneBook, String inputString)
     {
         //Cоздаём объект класса Scanner для обработки ввода с клавиатуры
         Scanner in = new Scanner(System.in);
+        //Cоздаём cтроковую переменную для обмена данных с пользователем
+        String sign;
         //Назначаем флаги для выходов из меню
         boolean exit1,exit2;
-        //Выводим информацию обо всех абонентах телефонной книги
-        phoneBookShowShortInfo(phoneBook);
-        //Запрашиваем, хочет ли пользователь просмотреть/изменить информацию об абоненте
+        //Инициализируем флаг, который сообщит вызывающему методу была ли произведено внутри метода редактирование
+        //данных абонента
+        boolean isEdit=false;
         exit1=false;
-        System.out.println("Что бы просмотреть/изменить информацию об абоненте, введите его номер, в противном случае введите любой другой символ");
+        //Цикл работает до тех пор, пока не получит флаг на выход
         while (exit1==false)
         {
-            String sign = in.next();
-            if (sign.matches("[0-9]+") == true)
+            if (inputString.matches("[0-9]+") == true)
             {
-                int a = Integer.parseInt(sign);
+                int a = Integer.parseInt(inputString);
                 if (a > phoneBook.size() || (a - 1) < 0) {
                     System.out.println("Выбрана операция по несуществующему абоненту!!!");
-                } else {
+                    exit1=true;
+                }
+                else
+                {
                     System.out.println("Выбрана операция по абоненту №" + a);
                     subscriberInfo(phoneBook.get(a - 1));
                     System.out.println("\nЕсли хотите изменить/удалить информацию об абоненте, введите 'да',\n"
@@ -186,9 +223,7 @@ public class PhoneBook extends Subscriber implements Serializable
                                 {
                                     System.out.println("Теперь данные этого абонента выглядят так:");
                                     subscriberInfo(phoneBook.get(a - 1));
-                                    //Поскольку произошло редактирование какого-то абонента, пересортировываем
-                                    // нашу телефонную книгу по текущему алгоритму и выходим
-                                    phoneBook.sort(pcomp);
+                                    isEdit=true;
                                 }
                                 exit1=true;
                                 exit2=true;
@@ -228,6 +263,7 @@ public class PhoneBook extends Subscriber implements Serializable
                 exit1 = true;
             }
         }
+        return isEdit;
     }
 
     //Создадим класс PersonFioComparator, для сортировки нашей коллекции объектов абонентов по полю Ф.И.О.
@@ -254,7 +290,7 @@ public class PhoneBook extends Subscriber implements Serializable
 
         // сохраняем в файл нашу телефонную книгу
         objectOutputStream.writeObject(phoneBook);
-        System.out.println("Телефонная книга сохранена в файл:"+file.getPath());
+        System.out.println("\nТелефонная книга сохранена в файл:"+file.getPath());
         //закрываем поток и освобождаем ресурсы
         objectOutputStream.close();
 
@@ -275,7 +311,7 @@ public class PhoneBook extends Subscriber implements Serializable
         return phoneBook;
     }
 
-    ////Создадим метод, осуществляющий поиск абонента телефонной книги по Ф.И.О.
+    //Создадим метод, осуществляющий поиск абонента телефонной книги по Ф.И.О.
     static void FindSubscriber(List<Subscriber> phoneBook)
     {
         //Cоздаём объект класса Scanner для обработки ввода с клавиатуры

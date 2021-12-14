@@ -254,6 +254,7 @@ public class Subscriber implements Serializable
     //Создадим метод, организовывающий ввод пользователем нового абонента
     public static Subscriber subscriberNew()
     {
+        System.out.println("\nСейчас мы добавим в нашу телефонную книгу нового абонента!");
         //Объявляем переменные - будущие поля для нашего абонента
         //Фамилия, имя и отчество
         String fio;
@@ -315,5 +316,4 @@ public class Subscriber implements Serializable
         //Возвращаем созданный объект
         return subs;
     }
-
 }
