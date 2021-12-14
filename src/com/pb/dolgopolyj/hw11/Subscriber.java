@@ -60,6 +60,8 @@ public class Subscriber implements Serializable
         return dateBirth;
     }
 
+    public List<String> getPhoneNumber() { return phoneNumber;}
+
     public String getAddress() {
         return address;
     }
@@ -71,7 +73,7 @@ public class Subscriber implements Serializable
     //Создадим метод, выводящий на экран всю информацию об абоненте
     public static void subscriberInfo(Subscriber subs)
     {
-        System.out.println("\nФ.И.О.- "+subs.fio);
+        System.out.println("Ф.И.О.- "+subs.fio);
         System.out.println("Дата рождения - "+subs.dateBirth);
         int i=0;
         for (String p: subs.phoneNumber)

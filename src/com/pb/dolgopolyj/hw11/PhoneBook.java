@@ -25,6 +25,12 @@ public class PhoneBook extends Subscriber implements Serializable
         Scanner in = new Scanner(System.in);
         //Назначаем флаги для выходов из меню
         boolean exit1,exit2;
+        //Инициализирум два компаратора - один для сортировки по Ф.И.О.
+        PersonFioComparator pcomp1 = new PersonFioComparator();
+        //Второй для сортировки по адресам
+        PersonAdressComparator pcomp2 = new PersonAdressComparator();
+        //Инициализируем флаг, отвечающий за текущий порядок сортировки
+        boolean isSortFio=true;
         //Выводим на экран приветствие программы и выполняемые ей действия
         System.out.println("*** Добрый день! ***\nВас приветствует 'PhoneBook'!!!");
         System.out.println("Вы сможете работать с нашей телефонной книгой в удобном для Вас режиме.");
@@ -73,7 +79,6 @@ public class PhoneBook extends Subscriber implements Serializable
         Subscriber subs4= new Subscriber("Долгополый Юрий Петрович", dateBirth, phoneNumber4,
                 "г.Изюм, ул.Рыночная, 8/76");
 
-        PersonFioComparator pcomp = new PersonFioComparator();
         //Создаем коллекцию для хранения в ней всех абонентов
         List<Subscriber> phoneBook = new ArrayList<>();
         //Загружаем телефонную книгу из файла
@@ -83,12 +88,15 @@ public class PhoneBook extends Subscriber implements Serializable
         phoneBook.add(subs3);
         phoneBook.add(subs4);
 
-        //Вызываем сортировку по полю Ф.И.О.
-       // phoneBook.sort(pcomp);
+        //Cортируем коллекцию, в зависимости от текущей настройки флага сортировки
+        if (isSortFio==true) phoneBook.sort(pcomp1);
+        else phoneBook.sort(pcomp2);
 
-        //Выводим информацию обо всех абонентах телефонной книги
-        phoneBookShowInfo(phoneBook);
+        //Выводим краткую информацию обо всех абонентах телефонной книги
+        //phoneBookShowShortInfo(phoneBook);
 
+        //Выводим полную информацию обо всех абонентах телефонной книги
+        phoneBookShowFullInfo(phoneBook);
 
         //Организовываем вывод основного меню
 
@@ -98,7 +106,7 @@ public class PhoneBook extends Subscriber implements Serializable
         //FindSubscriber(phoneBook);
 
 
-        phoneBookShowInfo(phoneBook);
+        //phoneBookShowInfo(phoneBook);
 
         //Сохраним нашу телефонную книгу в файл
         serializationPhoneBook(phoneBook);
@@ -108,17 +116,30 @@ public class PhoneBook extends Subscriber implements Serializable
 
     }
 
-    //Создадим метод, выводящий на экран информацию обо всех абонентах, содержащихся в телефонной книге
-    static void phoneBookShowInfo(List<Subscriber> subs)
+    //Создадим метод, выводящий на экран краткую информацию обо всех абонентах, содержащихся в телефонной книге
+    static void phoneBookShowShortInfo(List<Subscriber> phoneBook)
     {
         System.out.println("\nВ нашей телефонной книге хранится информация о следующих абонентах:");
         int i = 0;
-        for (Subscriber p: subs)
+        for (Subscriber p: phoneBook)
         {
-            i++;
-            System.out.println("№"+i+":"+p.getFio());
+          i+=1;
+          System.out.println("№"+i+":"+p.getFio()+", тел."+p.getPhoneNumber().get(0)+"; адрес:"+p.getAddress());
         }
+    }
 
+    //Создадим метод, выводящий на экран полную информацию обо всех абонентах, содержащихся в телефонной книге
+    static void phoneBookShowFullInfo(List<Subscriber> phoneBook)
+    {
+        System.out.println("\nВ нашей телефонной книге хранится информация о следующих абонентах:");
+        int i = 0;
+        for (Subscriber p: phoneBook)
+        {
+            i+=1;
+            System.out.println("-------------------АБОНЕНТ №"+i+"----------------------------------------------------");
+            subscriberInfo(p);;
+            System.out.println("---------------------------------------------------------------------------------");
+        }
     }
 
     //Создадим метод, выводящий на экран информацию об абонентах, содержащихся в телефонной книге.
@@ -130,7 +151,7 @@ public class PhoneBook extends Subscriber implements Serializable
         //Назначаем флаги для выходов из меню
         boolean exit1,exit2;
         //Выводим информацию обо всех абонентах телефонной книги
-        phoneBookShowInfo(phoneBook);
+        phoneBookShowShortInfo(phoneBook);
         //Запрашиваем, хочет ли пользователь просмотреть/изменить информацию об абоненте
         exit1=false;
         System.out.println("Что бы просмотреть/изменить информацию об абоненте, введите его номер, в противном случае введите любой другой символ");
@@ -166,7 +187,7 @@ public class PhoneBook extends Subscriber implements Serializable
                                     System.out.println("Теперь данные этого абонента выглядят так:");
                                     subscriberInfo(phoneBook.get(a - 1));
                                     //Поскольку произошло редактирование какого-то абонента, пересортировываем
-                                    // нашу телефонную книгу по первоначальному алгоритму (Ф.И.О.) и выходим
+                                    // нашу телефонную книгу по текущему алгоритму и выходим
                                     phoneBook.sort(pcomp);
                                 }
                                 exit1=true;
@@ -215,6 +236,12 @@ public class PhoneBook extends Subscriber implements Serializable
         public int compare(Subscriber a, Subscriber b) {
             return a.getFio().compareTo(b.getFio());
         }
+    }
+
+    //Создадим класс PersonAdressComparator, для сортировки нашей коллекции объектов абонентов по их адресам
+    static class PersonAdressComparator implements Comparator<Subscriber> {
+
+        public int compare(Subscriber a, Subscriber b) { return a.getAddress().compareTo(b.getAddress());}
     }
 
     //Создадим метод, сохраняющий в файл объект нашего класса
