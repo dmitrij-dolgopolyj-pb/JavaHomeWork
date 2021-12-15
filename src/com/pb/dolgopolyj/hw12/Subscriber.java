@@ -1,4 +1,4 @@
-package com.pb.dolgopolyj.hw11;
+package com.pb.dolgopolyj.hw12;
 
 //Импортируем для работы с датами дополнительные библиотеки
 import java.io.Serializable;
@@ -7,6 +7,7 @@ import java.util.*;
 /**
  * Класс Subscriber, который организовывает работу по хранению и обработке данных
  * одного абонента из телефонной книги.
+ * Для выполнения домашнего задания №12 класс будет использовать лямбда-выражения.
  */
 public class Subscriber implements Serializable
 {
