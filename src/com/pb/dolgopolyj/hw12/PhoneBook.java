@@ -301,7 +301,6 @@ public class PhoneBook extends Subscriber implements Serializable
     static void serializationPhoneBook (List<Subscriber> phoneBook) throws Exception
     {
         // Рабочий файл программы будем хранить в папке нашего домашнего задания
-        //File file = Paths.get("out\\production\\JavaHomeWork\\com\\pb\\dolgopolyj\\hw12\\phoneBook.data").toFile();
         File file = Paths.get("src\\com\\pb\\dolgopolyj\\hw12\\phoneBook.data").toFile();
         FileOutputStream outputStream = new FileOutputStream(file);
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
@@ -316,7 +315,6 @@ public class PhoneBook extends Subscriber implements Serializable
     static List<Subscriber> deserializationPhoneBook () throws Exception
     {
         // Рабочий файл программы хранитcя в папке нашего домашнего задания
-     //   File file = Paths.get("out\\production\\JavaHomeWork\\com\\pb\\dolgopolyj\\hw12\\phoneBook.data").toFile();
         File file = Paths.get("src\\com\\pb\\dolgopolyj\\hw12\\phoneBook.data").toFile();
         FileInputStream fileInputStream = new FileInputStream(file);
         ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
