@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Класс Subscriber, который организовывает работу по хранению и обработке данных
  * одного абонента из телефонной книги.
- * Для выполнения домашнего задания №12 класс будет использовать лямбда-выражения.
+ * Для выполнения домашнего задания №12 класс будет использовать лямбда-выражения при выводе на экран телефонов абонента.
  */
 public class Subscriber implements Serializable
 {
@@ -34,6 +34,13 @@ public class Subscriber implements Serializable
         //Используя Calendar и Date cохраняем дату и время записи данных абонента
         Calendar calendar = Calendar.getInstance();
         this.dateIni = calendar.getTime();
+    }
+
+    //Это функциональный интерфейс, он поможет нам вывести на экран список доступных телефонов абонента
+    @FunctionalInterface
+    interface PrintPhonesNumber
+    {
+        void printPhone(Subscriber subs1);
     }
 
     //Блок геттеров и сеттеров
@@ -76,12 +83,20 @@ public class Subscriber implements Serializable
     {
         System.out.println("Ф.И.О.- "+subs.fio);
         System.out.println("Дата рождения - "+subs.dateBirth);
-        int i=0;
-        for (String p: subs.phoneNumber)
+
+        //Наполняем нужной нам логикой функциональный интерфейс, используя лямбда-выражение
+        PrintPhonesNumber print=(subs1) ->
         {
+            int i=0;
+            for (String p: subs1.phoneNumber)
+            {
             i++;
             System.out.println("Телефон №"+i+":"+p);
-        }
+            }
+        };
+        //Организовываем вывод на экран телефонов абонента
+        print.printPhone(subs);
+
         System.out.println("Адрес:"+subs.address);
         System.out.println("Дата создания/модификации данных абонента:"+subs.dateIni);
     }

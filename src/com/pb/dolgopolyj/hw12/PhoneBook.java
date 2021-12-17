@@ -8,7 +8,8 @@ import java.util.*;
 
 /**
  * Класс PhoneBook, который организовывает работу с телефонной книгой.
- * Для выполнения домашнего задания №12 класс будет использовать лямбда-выражения и Stream API.
+ * Для выполнения домашнего задания №12 класс будет использовать лямбда-выражения в процедуре сортировки абонентов
+ * и Stream API.
  */
 public class PhoneBook extends Subscriber implements Serializable
 {
@@ -18,6 +19,13 @@ public class PhoneBook extends Subscriber implements Serializable
     public PhoneBook(String fio, Date dateBirth, List phoneNumber, String address)
     {
         super(fio, dateBirth, phoneNumber, address);
+    }
+
+    //Это функциональный интерфейс, он поможет нам в организации сортировки абонентов
+    @FunctionalInterface
+    interface SubscribersSort
+    {
+        void sortByFlag(List<Subscriber> listSubscribers, boolean SortFlag);
     }
 
     public static void main(String[] args) throws Exception
@@ -30,6 +38,7 @@ public class PhoneBook extends Subscriber implements Serializable
         boolean exit1,exit2;
         //Инициализирум два компаратора - один для сортировки по Ф.И.О.
         PersonFioComparator pcomp1 = new PersonFioComparator();
+
         //Второй для сортировки по адресам
         PersonAdressComparator pcomp2 = new PersonAdressComparator();
         //Инициализируем флаг, отвечающий за текущий порядок сортировки
@@ -49,9 +58,15 @@ public class PhoneBook extends Subscriber implements Serializable
         //Загружаем телефонную книгу из файла
         phoneBook=deserializationPhoneBook();
 
+        //Наполняем нужной нам логикой функциональный интерфейс, используя лямбда-выражение
+        SubscribersSort mySort=(listSubscribers, SortFlag)->
+        {
+            if (SortFlag==true) listSubscribers.sort(pcomp1);
+            else listSubscribers.sort(pcomp2);
+        };
+
         //Cортируем коллекцию, в зависимости от текущей настройки флага сортировки
-        if (isSortFio==true) phoneBook.sort(pcomp1);
-        else phoneBook.sort(pcomp2);
+        mySort.sortByFlag(phoneBook,isSortFio);
 
         //Работаем в программе, пока пользователь не даст команду на выход из программы
         while (inputString.equals("в")!=true)
@@ -72,8 +87,7 @@ public class PhoneBook extends Subscriber implements Serializable
                 if (phoneBookInfoEdit(phoneBook, inputString)==true)
                 {
                     //Произошло редактирование данных абонента, вызываем сортировку на текущих настройках
-                    if (isSortFio==true) phoneBook.sort(pcomp1);
-                    else phoneBook.sort(pcomp2);
+                    mySort.sortByFlag(phoneBook,isSortFio);
                 }
             }
 
@@ -100,8 +114,7 @@ public class PhoneBook extends Subscriber implements Serializable
                 if (isSortFio==true) isSortFio=false;
                 else isSortFio=true;
                 //Cортируем коллекцию, в зависимости от текущей настройки флага сортировки
-                if (isSortFio==true) phoneBook.sort(pcomp1);
-                else phoneBook.sort(pcomp2);
+                mySort.sortByFlag(phoneBook,isSortFio);
             }
 
             //Если пользователь хочет найти абонента, вызываем метод такого поиска
@@ -268,6 +281,8 @@ public class PhoneBook extends Subscriber implements Serializable
         return isEdit;
     }
 
+
+
     //Создадим класс PersonFioComparator, для сортировки нашей коллекции объектов абонентов по полю Ф.И.О.
     static class PersonFioComparator implements Comparator<Subscriber> {
 
@@ -295,7 +310,6 @@ public class PhoneBook extends Subscriber implements Serializable
         System.out.println("\nТелефонная книга сохранена в файл:"+file.getPath());
         //закрываем поток и освобождаем ресурсы
         objectOutputStream.close();
-
     }
 
     //Создадим метод, загружающий ранее сохраненную телефонную книгу из файла в объект нашего класса List<Subscriber>
