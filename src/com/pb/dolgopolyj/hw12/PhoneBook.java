@@ -5,11 +5,14 @@ package com.pb.dolgopolyj.hw12;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Класс PhoneBook, который организовывает работу с телефонной книгой.
  * Для выполнения домашнего задания №12 класс будет использовать лямбда-выражения в процедуре сортировки абонентов
- * и Stream API.
+ * (функциональный интерфейс SubscribersSort, его метод sortByFlag)
+ * и Stream API в процедуре поиска абонентов (метод FindSubscriberInStream)
  */
 public class PhoneBook extends Subscriber implements Serializable
 {
@@ -113,6 +116,7 @@ public class PhoneBook extends Subscriber implements Serializable
                 //Изменяем флаг сортировки на противоположный
                 if (isSortFio==true) isSortFio=false;
                 else isSortFio=true;
+
                 //Cортируем коллекцию, в зависимости от текущей настройки флага сортировки
                 mySort.sortByFlag(phoneBook,isSortFio);
             }
@@ -137,7 +141,7 @@ public class PhoneBook extends Subscriber implements Serializable
     //Создадим метод, выводящий на экран основное меню программы (аргументом метод получает размер телефонной книги)
     static void phoneBookShowMenu(int phoneBookSize)
     {
-        //Объявляем переменные, для вывода на экран первого и последнего номера абонента в телофонной книге
+        //Объявляем переменные, для вывода на экран первого и последнего номера абонента в телефонной книге
         String startElement="-",endElement="-";
         if (phoneBookSize>0)
         {
@@ -335,34 +339,30 @@ public class PhoneBook extends Subscriber implements Serializable
         int index;
         inString2 ="да";
         while (inString2.equals("да")==true) {
-            //Переменная, отвественная за нахождение совпадения
-            boolean isСoincidence = false;
+
             System.out.println("\nВы выбрали функцию поиска абонента. Поиск будет осуществлен по всем полям Ф.И.О. телефонной книги.");
             System.out.println("В качестве результата Вы получите полную информацию по всем абонентам,");
             System.out.println("которые в указанном поле будут содержать введенную Вами строку. То есть, например,");
             System.out.println("введя только имя абонента, вы получите список всех абонентов с этим именем и т.п.");
             System.out.print("Введите Ф.И.О. абонента (в качестве разделителя используйте пробелы):");
-            //Для сравнения строк приведем их к верхнему регистру
-            inString = in.nextLine().toUpperCase(Locale.ROOT);
-            for (int i = 0; i < phoneBook.size(); i++) {
-                index = phoneBook.get(i).getFio().toUpperCase(Locale.ROOT).lastIndexOf(inString);
-                if (index == -1) {
-                    //Нужная подстрока не найдена
-                } else {
-                    //Найдено совпадение, выводим информацию об абоненте и обновляем значение флага isСoincidence
-                    subscriberInfo(phoneBook.get(i));
-                    isСoincidence = true;
-                }
-            }
-            if (isСoincidence == false) {
-                System.out.println("По введенным данным абонентов не найдено!");
-            }
+            inString = in.nextLine();
+            //Вызываем метод поиска абонента с помощью стрима
+            FindSubscriberInStream (phoneBook, inString);
             System.out.println("Повторить поиск(введите 'да' или любой другой символ,если нет)?");
-
             inString2 = in.next();
             in.nextLine();
         }
     }
 
+    //Метод, для поиска нужных нам абонентов в котором применяем Stream API
+    static void FindSubscriberInStream(List<Subscriber> phoneBook, String inString)
+    {
+        //Создадим стрим из объектов нашей коллекции телефонной книги
+        phoneBook.stream()
+        //Отфильтруем строки на основании введенного пользователем значения поисковой переменной
+         .filter(x->x.getFio().toUpperCase().lastIndexOf(inString.toUpperCase())!=(-1))
+        //С помощью терминального оператора выведем на экран отфильтрованный стрим
+         .forEach(x-> System.out.println(x.getFio()+", адрес:"+x.getAddress()+", телефон:"+x.getPhoneNumber().get(0)));
+    }
 }
 

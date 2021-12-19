@@ -7,7 +7,8 @@ import java.util.*;
 /**
  * Класс Subscriber, который организовывает работу по хранению и обработке данных
  * одного абонента из телефонной книги.
- * Для выполнения домашнего задания №12 класс будет использовать лямбда-выражения при выводе на экран телефонов абонента.
+ * Для выполнения домашнего задания №12 класс будет использовать лямбда-выражения при выводе на экран телефонов абонента
+ * (функциональный интерфейс PrintPhonesNumber, его метод printPhone)
  */
 public class Subscriber implements Serializable
 {
@@ -85,7 +86,7 @@ public class Subscriber implements Serializable
         System.out.println("Дата рождения - "+subs.dateBirth);
 
         //Наполняем нужной нам логикой функциональный интерфейс, используя лямбда-выражение
-        PrintPhonesNumber print=(subs1) ->
+        PrintPhonesNumber print=subs1 ->
         {
             int i=0;
             for (String p: subs1.phoneNumber)
