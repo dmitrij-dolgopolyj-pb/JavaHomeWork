@@ -12,7 +12,7 @@ public class TwoThreads
     //Значение 0 - совместная работа потоков, без блокировки
     //Значение 1 - необходима блокировка потока-производителя до конца работы блока-потребителя
     //Значение 2 - необходима блокировка блока-потребителя до конца работы блока-производителя
-    private static volatile int controlValue = 0;
+    private static volatile int controlValue;
 
     //Для создания потока-производителя создаем свой класс MyThread1
     private static class MyThread1 implements Runnable
@@ -37,31 +37,39 @@ public class TwoThreads
             //Объявляем переменную, которая будет помогать генерировать случайное число
             Random random=new Random();
             int rundomNumber;
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
-                //Организуем задержку работы потока
+                //Организуем задержку для лучшей демонстрации работы потока
                 for (int k = 0; k < 1000000; k++)
                 {rundomNumber=random.nextInt(11);  }
-                //Если поток-потребитель работает, организуем проверку, нужно ли дать ему завершить работу
-                if (consumerTread.isAlive())
+
+                //Работаем, только если в буфере менее 5-ти элементов, иначе cообщаем о полном буфере и ждем появления в нем свободного места
+                if (dataBuffer.size()<3)
                 {
                     //Проверяем, поставлена ли задача прервать выполнение потока-производителя
-                    if (controlValue==1) {
+                    if (controlValue == 1)
+                    {
                         //Пробуем остановиться до конца отработки потока-потребителя
                         try {
                             System.out.println("Поток 'производитель' приостановлен.");
                             consumerTread.join();
                             System.out.println("Завершена работа 'потребителя', возобновляем работу 'производителя'.");
+                            //Разрешаем работу обоих потоков
+                            controlValue = 0;
                         } catch (InterruptedException e) {
                             System.out.println("Прерывание в потоке 'производителе'!!!");
                         }
                     }
-                }
 
-                //Генерируем случайное число от 0 до 10
-                rundomNumber=random.nextInt(11);
-                System.out.println("Производитель сгенерировал число," + " iteration: " + (i + 1)+"; rundom="+rundomNumber);
-                dataBuffer.add(rundomNumber);
+                    //Генерируем случайное число от 0 до 10
+                    rundomNumber = random.nextInt(11);
+                    dataBuffer.add(rundomNumber);
+                    System.out.println("Производитель сгенерировал число, оно в dataBuffer[" + (dataBuffer.size()-1) + "]=" + dataBuffer.get((dataBuffer.size()-1)));
+                }
+                else
+                {
+                    System.out.println("Буфер заполнен полностью!");
+                }
             }
         }
     }
@@ -91,51 +99,39 @@ public class TwoThreads
             //Объявляем переменную, которая будет помогать генерировать случайное число
             Random random=new Random();
             int rundomNumber;
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
-                //Организуем задержку работы потока
+                //Организуем задержку для лучшей демонстрации работы потока
                 for (int k = 0; k < 1000000; k++)
                 {rundomNumber=random.nextInt(11);  }
 
-                //Если поток-производитель работает, организуем проверку, нужно ли дать ему завершить работу
-                if (manufacturerTread.isAlive())
+                //Работаем, если в буфере есть хотя бы 1 элемент, иначе ждем, пока место не освободится
+                if (dataBuffer.size()>0)
                 {
                     //Проверяем, поставлена ли задача прервать выполнение потока-потребителя
-                    if (controlValue==2) {
+                    if (controlValue == 2) {
                         //Пробуем остановиться до конца отработки потока-производителя
                         try {
                             System.out.println("Поток 'потребитель' приостановлен.");
                             manufacturerTread.join();
                             System.out.println("Завершена работа 'производителя', возобновляем работу 'потребителя'.");
+                            //Разрешаем работу обоих потоков
+                            controlValue = 0;
                         } catch (InterruptedException e) {
                             System.out.println("Прерывание в потоке 'потребителе'!!!");
                         }
                     }
-                }
 
-                System.out.println("Потребляю на iteration: " + (i + 1));
-                if (dataBuffer.size()>0)
+                    System.out.println("Потребляю на iteration: " + (i + 1));
+                    if (dataBuffer.size() > 0) {
+                        System.out.println("В буфере есть число, dataBuffer[" + (dataBuffer.size() - 1) + "]=" + dataBuffer.get((dataBuffer.size() - 1)));
+                        dataBuffer.remove((dataBuffer.size() - 1));
+                    }
+                }
+                else
                 {
-                    System.out.println("В буфере есть число, dataBuffer["+i+"]="+dataBuffer.get(i));
+                    System.out.println("Буфер пуст!");
                 }
-
-
-
-//                // Проверяем, работает ли ещё "производитель"
-//                if (manufacturerThread.isAlive()) {
-//                    try {
-//                        // Если "производитель" еще работает, ждем окончания его работы
-//                        manufacturerThread.join();
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    System.out.println("Ожидаю окончания работы производителя...");
-//
-//                } else {
-//                    //если "производитель" уже закончил работу, спокойно завершаем свою
-//                    System.out.println("Производитель уже завершил работу, можно заканчивать свою.");
-//                }
             }
         }
     }
@@ -152,17 +148,13 @@ public class TwoThreads
         List<Integer> dataBuffer=new ArrayList<>();
 
         //Создаем объект класса MyThread1 для потока-производителя
-        //Thread manufacturerThread=new MyThread1();
         MyThread1 manufacturerThread=new MyThread1(dataBuffer);
         Thread t1 = new Thread(manufacturerThread, "manufacturerThread");
         //Создаем объект класса MyThread2 для потока-потребителя
-        //Thread consumerThread=new MyThread2();
         MyThread2 consumerThread=new MyThread2(dataBuffer);
         Thread t2 = new Thread(consumerThread, "consumerThread");
-
-        //Задаем новое значение управляющей переменной
+        //Разрешаем совместную работу обоих потоков
         controlValue=0;
-
         //Передаем в поток-производитель ссылку на поток-потребитель
         manufacturerThread.setConsumerTread(t2);
         //Передаем в поток-потребитель ссылку на поток-производитель
