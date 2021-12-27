@@ -127,13 +127,6 @@ public class TwoThreads
         Queue<Integer> dataBuffer=new PriorityQueue<>();
 
         //Создаем объект класса MyThread1 для потока-производителя
-//        MyThread1 manufacturerThread=new MyThread1(dataBuffer);
-//        Thread t1 = new Thread(manufacturerThread, "manufacturerThread");
-//        //Создаем объект класса MyThread2 для потока-потребителя
-//        MyThread2 consumerThread=new MyThread2(dataBuffer);
-//        Thread t2 = new Thread(consumerThread, "consumerThread");
-
-        //Создаем объект класса MyThread1 для потока-производителя
         MyThread1 manufacturerThread=new MyThread1(dataBuffer);
         Thread t1 = new Thread(manufacturerThread, "manufacturerThread");
         //Создаем объект класса MyThread2 для потока-потребителя
