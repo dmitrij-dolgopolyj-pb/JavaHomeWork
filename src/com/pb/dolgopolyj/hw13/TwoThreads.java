@@ -1,36 +1,29 @@
-package com.pb.dolgopolyj.hw13;
+package com.pb.dolgopolyj.test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+
 /**
  * Класс TwoThreads, который организовывает работу с двумя потоками, разделяющих общий буфер данных
  */
 public class TwoThreads
 {
-    //Переменная класса, для управления потоками
-    //Значение 0 - совместная работа потоков, без блокировки
-    //Значение 1 - необходима блокировка потока-производителя до конца работы блока-потребителя
-    //Значение 2 - необходима блокировка блока-потребителя до конца работы блока-производителя
-    private static volatile int controlValue;
-
     //Для создания потока-производителя создаем свой класс MyThread1
     private static class MyThread1 implements Runnable
     {
-        //Объявляем лист рабочего буфера класса
-        List<Integer> dataBuffer;
+        //Объявляем рабочий буфер класса
+        volatile Queue<Integer> dataBuffer;
         //Объявляем переменную класса Thread для взаимодействия с потоком-потребителем
         Thread consumerTread;
         public void setConsumerTread(Thread consumerTread) {
             this.consumerTread = consumerTread;
         }
 
-        public MyThread1(List<Integer> dataBuffer)
+        public MyThread1(Queue <Integer> dataBuffer)
         {
             this.dataBuffer = dataBuffer;
         }
 
-        //Переопределим метод run этого потока - он будет генерировать случайные числа
+        //Переопределим метод run этого потока - он будет генерировать случайные числа и отправлять их в буфер
         @Override
         public void run()
         {
@@ -44,31 +37,16 @@ public class TwoThreads
                 {rundomNumber=random.nextInt(11);  }
 
                 //Работаем, только если в буфере менее 5-ти элементов, иначе cообщаем о полном буфере и ждем появления в нем свободного места
-                if (dataBuffer.size()<3)
+                if (dataBuffer.size()<5)
                 {
-                    //Проверяем, поставлена ли задача прервать выполнение потока-производителя
-                    if (controlValue == 1)
-                    {
-                        //Пробуем остановиться до конца отработки потока-потребителя
-                        try {
-                            System.out.println("Поток 'производитель' приостановлен.");
-                            consumerTread.join();
-                            System.out.println("Завершена работа 'потребителя', возобновляем работу 'производителя'.");
-                            //Разрешаем работу обоих потоков
-                            controlValue = 0;
-                        } catch (InterruptedException e) {
-                            System.out.println("Прерывание в потоке 'производителе'!!!");
-                        }
-                    }
-
-                    //Генерируем случайное число от 0 до 10
-                    rundomNumber = random.nextInt(11);
-                    dataBuffer.add(rundomNumber);
-                    System.out.println("Производитель сгенерировал число, оно в dataBuffer[" + (dataBuffer.size()-1) + "]=" + dataBuffer.get((dataBuffer.size()-1)));
+                    //Генерируем случайное число от 0 до 100
+                    rundomNumber = random.nextInt(101);
+                    //Вызываем синхронизированный метод заполнения буфера
+                    bufferInOut (rundomNumber,true, dataBuffer);
                 }
                 else
                 {
-                    System.out.println("Буфер заполнен полностью!");
+                    System.out.println("------------------------------Буфер заполнен полностью! Поток 'производитель' ожидает освобождения буфера...--------------------");
                 }
             }
         }
@@ -77,8 +55,8 @@ public class TwoThreads
     //Для создания потока-потребителя создаем свой класс MyThread2
     private static class MyThread2 implements Runnable
     {
-        //Объявляем лист рабочего буфера класса
-        List<Integer> dataBuffer;
+        //Объявляем рабочий буфер класса
+        volatile Queue<Integer> dataBuffer;
         //Объявляем переменную класса Thread для взаимодействия с потоком-производителем
         Thread manufacturerTread;
         public void setManufacturerTread(Thread manufacturerTread)
@@ -87,12 +65,12 @@ public class TwoThreads
         }
 
         //Конструктор класса
-        public MyThread2(List<Integer> dataBuffer)
+        public MyThread2(Queue <Integer> dataBuffer)
         {
             this.dataBuffer = dataBuffer;
         }
 
-        //Переопределим метод run этого потока - он будет генерировать случайные числа
+        //Переопределим метод run этого потока - он будет изымать из буфера сгенирированные случайные числа
         @Override
         public void run()
         {
@@ -108,31 +86,32 @@ public class TwoThreads
                 //Работаем, если в буфере есть хотя бы 1 элемент, иначе ждем, пока место не освободится
                 if (dataBuffer.size()>0)
                 {
-                    //Проверяем, поставлена ли задача прервать выполнение потока-потребителя
-                    if (controlValue == 2) {
-                        //Пробуем остановиться до конца отработки потока-производителя
-                        try {
-                            System.out.println("Поток 'потребитель' приостановлен.");
-                            manufacturerTread.join();
-                            System.out.println("Завершена работа 'производителя', возобновляем работу 'потребителя'.");
-                            //Разрешаем работу обоих потоков
-                            controlValue = 0;
-                        } catch (InterruptedException e) {
-                            System.out.println("Прерывание в потоке 'потребителе'!!!");
-                        }
-                    }
-
-                    System.out.println("Потребляю на iteration: " + (i + 1));
-                    if (dataBuffer.size() > 0) {
-                        System.out.println("В буфере есть число, dataBuffer[" + (dataBuffer.size() - 1) + "]=" + dataBuffer.get((dataBuffer.size() - 1)));
-                        dataBuffer.remove((dataBuffer.size() - 1));
-                    }
+                    //Вызываем синхронизированный метод изъятия данных из буфера
+                    bufferInOut (-1,false, dataBuffer);
                 }
                 else
                 {
-                    System.out.println("Буфер пуст!");
+                    System.out.println("-------------------------------------Буфер пуст! Поток 'потребитель' ожидает данные...------------------------------------------------");
                 }
             }
+        }
+    }
+
+    //Для правильной работы с буфером данных по вводу/выводу этот метод синхронизируем
+    //Для записи данных в буфер передается переменная 'in' и устанавливается флаг isIn=true
+    //Для считывания данных устанавливается флаг isIn=false
+    synchronized public static void bufferInOut (int in, boolean isIn, Queue<Integer> dataBuffer)
+    {
+        int r=-1;
+        if (isIn==true)
+        {
+            dataBuffer.add(in);
+            System.out.println("Производитель сгенерировал число:"+in+".");
+        }
+        else
+        {
+            r=dataBuffer.poll();
+            System.out.println("Потребитель изымает число:"+r);
         }
     }
 
@@ -145,7 +124,14 @@ public class TwoThreads
         System.out.println("Поток 'Производитель' генерирует данные (случайные числа от 1 до 100) и помещает их в буфер.");
         System.out.println("Поток 'Потребитель' «потребляет» их из буфера - выводит на печать в консоль и очищает буфер.");
 
-        List<Integer> dataBuffer=new ArrayList<>();
+        Queue<Integer> dataBuffer=new PriorityQueue<>();
+
+        //Создаем объект класса MyThread1 для потока-производителя
+//        MyThread1 manufacturerThread=new MyThread1(dataBuffer);
+//        Thread t1 = new Thread(manufacturerThread, "manufacturerThread");
+//        //Создаем объект класса MyThread2 для потока-потребителя
+//        MyThread2 consumerThread=new MyThread2(dataBuffer);
+//        Thread t2 = new Thread(consumerThread, "consumerThread");
 
         //Создаем объект класса MyThread1 для потока-производителя
         MyThread1 manufacturerThread=new MyThread1(dataBuffer);
@@ -153,18 +139,16 @@ public class TwoThreads
         //Создаем объект класса MyThread2 для потока-потребителя
         MyThread2 consumerThread=new MyThread2(dataBuffer);
         Thread t2 = new Thread(consumerThread, "consumerThread");
-        //Разрешаем совместную работу обоих потоков
-        controlValue=0;
+
         //Передаем в поток-производитель ссылку на поток-потребитель
         manufacturerThread.setConsumerTread(t2);
         //Передаем в поток-потребитель ссылку на поток-производитель
         consumerThread.setManufacturerTread(t1);
+
         //Запускаем поток-производитель
         t1.start();
         //Запускаем поток-потребитель
         t2.start();
-
-        System.out.println("Переменная controlValue равна:"+controlValue);
 
         //Благодарности :)
         System.out.println("\n************************** Cпасибо за использование нашей 'TwoThreads'!!! ************************");
