@@ -11,8 +11,8 @@ public class TwoThreads
     private static class MyThread1 implements Runnable
     {
         //Объявляем рабочий буфер класса
-        volatile Queue<Integer> dataBuffer;
-        //Объявляем переменную класса Thread для взаимодействия с потоком-потребителем
+        private final Queue<Integer> dataBuffer;
+        //Объявляем переменную класса Thread
         Thread consumerTread;
         public void setConsumerTread(Thread consumerTread) {
             this.consumerTread = consumerTread;
@@ -41,14 +41,34 @@ public class TwoThreads
                 {
                     //Генерируем случайное число от 0 до 100
                     rundomNumber = random.nextInt(101);
-                    //Вызываем синхронизированный метод заполнения буфера
-                    bufferInOut (rundomNumber,true, dataBuffer);
+
+                    synchronized (dataBuffer)
+                    {
+                        dataBuffer.add(rundomNumber);
+                        System.out.println("Производитель сгенерировал число:"+rundomNumber+".");
+                    }
+
                 }
                 else
                 {
                     System.out.println("------------------------------Буфер заполнен полностью! Поток 'производитель' ожидает освобождения буфера...--------------------");
+                    try
+                    {
+                        synchronized (dataBuffer)
+                        {
+                            System.out.println("Оживляем поток потребителя, заставляем уснуть производителя");
+                            dataBuffer.notify();
+                            dataBuffer.wait();
+                        }
+                    }
+                    catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
             }
+            //Поток полностью отработал, даем возможность завершить работу другому потоку, если он в ожидании
+            synchronized (dataBuffer) {dataBuffer.notify();}
         }
     }
 
@@ -56,7 +76,7 @@ public class TwoThreads
     private static class MyThread2 implements Runnable
     {
         //Объявляем рабочий буфер класса
-        volatile Queue<Integer> dataBuffer;
+        private final Queue<Integer> dataBuffer;
         //Объявляем переменную класса Thread для взаимодействия с потоком-производителем
         Thread manufacturerTread;
         public void setManufacturerTread(Thread manufacturerTread)
@@ -86,32 +106,25 @@ public class TwoThreads
                 //Работаем, если в буфере есть хотя бы 1 элемент, иначе ждем, пока место не освободится
                 if (dataBuffer.size()>0)
                 {
-                    //Вызываем синхронизированный метод изъятия данных из буфера
-                    bufferInOut (-1,false, dataBuffer);
+                    synchronized (dataBuffer)
+                    {System.out.println("Потребитель изымает число:"+dataBuffer.poll());}
                 }
                 else
                 {
                     System.out.println("-------------------------------------Буфер пуст! Поток 'потребитель' ожидает данные...------------------------------------------------");
+                    try {
+                         synchronized (dataBuffer) {
+                             System.out.println("Оживляем поток производителя, заставляем уснуть потребителя");
+                            dataBuffer.notify();
+                            dataBuffer.wait();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }
-    }
-
-    //Для правильной работы с буфером данных по вводу/выводу этот метод синхронизируем
-    //Для записи данных в буфер передается переменная 'in' и устанавливается флаг isIn=true
-    //Для считывания данных устанавливается флаг isIn=false
-    synchronized public static void bufferInOut (int in, boolean isIn, Queue<Integer> dataBuffer)
-    {
-        int r=-1;
-        if (isIn==true)
-        {
-            dataBuffer.add(in);
-            System.out.println("Производитель сгенерировал число:"+in+".");
-        }
-        else
-        {
-            r=dataBuffer.poll();
-            System.out.println("Потребитель изымает число:"+r);
+            //Поток полностью отработал, даем возможность завершить работу другому потоку, если он в ожидании
+            synchronized (dataBuffer) {dataBuffer.notify();}
         }
     }
 
