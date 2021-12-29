@@ -1,39 +1,53 @@
-package com.pb.dolgopolyj.test;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-public class TestLiambda
-{
-    @FunctionalInterface
-    interface Operation {
-        int execute(int x, int y);
-    }
-
-    public static void main(String[] args) {
-        Operation add = new Operation() {
-            @Override
-            public int execute(int x, int y) {
-                return x + y;
-            }
-        };
-
-        Operation sub = (x, y) -> x - y;
-        Operation div = (x, y) -> x / y;
-        Operation mul = (x, y) -> x * y;
-
-        int resAdd = add.execute(12, 4);
-        int resSub = sub.execute(12, 4);
-        int resDiv = div.execute(12, 4);
-        int resMul = mul.execute(12, 4);
-
-        System.out.println("add: " + resAdd);
-        System.out.println("sub: " + resSub);
-        System.out.println("div: " + resDiv);
-        System.out.println("mul: " + resMul);
-    }
-}
+//
+//import java.net.InetAddress;
+//public class TestLiambda {
+//    public static void main(String[] args) throws Exception {
+//        InetAddress addr = InetAddress.getByName("www.google.com");
+//        // выводим IP-адрес
+//        System.out.println(addr.getHostAddress());
+//
+//        // Для работы на локальном компьютере можно использовать IP-адрес 127.0.0.1
+//        // или имя “localhost” или null.
+//        addr = InetAddress.getByName("localhost");
+//        System.out.println(addr.getHostAddress());
+//    }
+//}
+//package com.pb.dolgopolyj.test;
+//
+//import java.util.ArrayList;
+//import java.util.List;
+//import java.util.Random;
+//
+//public class TestLiambda
+//{
+//    @FunctionalInterface
+//    interface Operation {
+//        int execute(int x, int y);
+//    }
+//
+//    public static void main(String[] args) {
+//        Operation add = new Operation() {
+//            @Override
+//            public int execute(int x, int y) {
+//                return x + y;
+//            }
+//        };
+//
+//        Operation sub = (x, y) -> x - y;
+//        Operation div = (x, y) -> x / y;
+//        Operation mul = (x, y) -> x * y;
+//
+//        int resAdd = add.execute(12, 4);
+//        int resSub = sub.execute(12, 4);
+//        int resDiv = div.execute(12, 4);
+//        int resMul = mul.execute(12, 4);
+//
+//        System.out.println("add: " + resAdd);
+//        System.out.println("sub: " + resSub);
+//        System.out.println("div: " + resDiv);
+//        System.out.println("mul: " + resMul);
+//    }
+//}
 //package com.pb.dolgopolyj.hw13;
 //
 //        import java.util.ArrayList;
