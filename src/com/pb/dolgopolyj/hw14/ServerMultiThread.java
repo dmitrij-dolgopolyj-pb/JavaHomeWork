@@ -1,0 +1,17 @@
+package com.pb.dolgopolyj.hw14;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Calendar;
+
+/**
+ * Класс - сервер, принимает запросы от клиентов и отдает данные в многопоточном режиме
+ */
+
+public class ServerMultiThread
+{
+}
