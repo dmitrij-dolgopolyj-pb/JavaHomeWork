@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Calendar;
 
 /**
  * Класс - сервер, принимает запросы от клиентов и отдает данные
@@ -15,6 +16,14 @@ public class Server {
         // Определяем номер порта, который будет "слушать" сервер
         int port = 49153;
 
+        //Выводим на экран приветствие программы и выполняемые ей действия
+        System.out.println("**************************************** Добрый день! ********************************************\n");
+        System.out.println("***************************Вас приветствует программа 'Server'!!!*********************************\n");
+        System.out.println("Она демонстрирует работу по обработке полученных данных в паре Клиент-Сервер и передаче их обратно\n");
+
+        //Создаем объект класса Calendar для работы с датами
+        Calendar calendar = null;
+
         try {
             // Открыть серверный сокет (ServerSocket)
             // Это специальный класс для сетевого взаимодействия с серверной стороны
@@ -22,7 +31,7 @@ public class Server {
 
             // Входим в бесконечный цикл - ожидаем соединения
             while (true) {
-                System.out.println("Waiting for a connection on " + port);
+                System.out.println("Сервер ожидает соединения с пользователем(и), используем порт:" + port);
 
                 // Получив соединение начинаем работать с сокетом
                 Socket fromClientSocket = servSocket.accept();
@@ -36,16 +45,20 @@ public class Server {
                     String str;
                     while ((str = br.readLine()) != null) {
                         // Печатаем сообщение
-                        System.out.println("The message: " + str);
+                        System.out.println("Получено сообщение от пользователя: " + str);
 
                         // Сравниваем с "bye" и если это так - выходим из цикла
                         if (str.equals("bye")) {
+                            //Сообщаем, что пользователь завершил работу с сервером
+                            System.out.println("Пользователь завершил работу с сервером");
                             // Тоже говорим клиенту "bye" и выходим из цикла
                             pw.println("bye");
                             break;
                         } else {
                             // Посылаем клиенту ответ
-                            str = "Server returns: " + str;
+                            calendar = Calendar.getInstance();
+                            str = calendar.getTime()+" " + str;
+                            System.out.println("Клиенту передан ответ: " + str);
                             pw.println(str);
                         }
                     }
