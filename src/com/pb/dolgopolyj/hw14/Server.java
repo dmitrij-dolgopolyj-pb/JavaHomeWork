@@ -42,20 +42,23 @@ public class Server {
                      PrintWriter pw = new PrintWriter(localSocket.getOutputStream(), true);
                      BufferedReader br = new BufferedReader(new InputStreamReader(localSocket.getInputStream()))) {
 
-                    // Читаем сообщения от клиента до тех пор пока он не скажет "bye"
+                    // Читаем сообщения от клиента до тех пор пока он не скажет "exit"
                     String str;
                     while ((str = br.readLine()) != null) {
                         // Печатаем сообщение
                         System.out.println("Получено сообщение от пользователя: " + str);
 
-                        // Сравниваем с "bye" и если это так - выходим из цикла
-                        if (str.equals("bye")) {
+                        // Сравниваем с "exit" и если это так - выходим из цикла
+                        if (str.equals("exit"))
+                        {
                             //Сообщаем, что пользователь завершил работу с сервером
                             System.out.println("Пользователь завершил работу с сервером");
-                            // Тоже говорим клиенту "bye" и выходим из цикла
-                            pw.println("bye");
+                            //Посылаем сообщение пользователю о расставании с ним и выходим из цикла
+                            pw.println("Bye!");
                             break;
-                        } else {
+                        }
+                        else
+                        {
                             // Посылаем клиенту ответ
                             calendar = Calendar.getInstance();
                             str = calendar.getTime()+" " + str;

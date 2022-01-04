@@ -16,8 +16,8 @@ public class Client
     {
         //Cоздаём объект класса Scanner для обработки ввода с клавиатуры
         Scanner in = new Scanner(System.in);
-        //Cоздаём переменную для ввода строки с клавиатуры
-        String inputString="";
+        //Cоздаём переменные для ввода строки с клавиатуры и обмена данных с сервером
+        String inputString,str;
         //Выводим на экран приветствие программы и выполняемые ей действия
         System.out.println("******************************************** Добрый день! ********************************************");
         System.out.println("********************************Вас приветствует программа 'Client'!!!********************************\n");
@@ -29,53 +29,54 @@ public class Client
         System.out.println("Подключение данного клиента к серверу будет осуществляться через порт:"+portNumber+"\n");
         System.out.println("ВАЖНО!!! Перед дальнейшей работой, убедитесь, что программа Server уже запущена!");
         System.out.println("В ее консоли должно появиться сообщение: Сервер ожидает соединения с пользователем(и), используем порт:"+portNumber);
+        System.out.println("После получения сообщения о запуске клиента вы сможете вводить сообщения, которые будут отправлены на сервер");
+        System.out.println("Для завершения работы с сервером необходимо будет отправить ему слово 'exit'");
 
-        System.out.print("\nВведите строку для передачи серверу->");
-        //Ждем ввода cтроки пользователем
-        inputString = in.nextLine();
+            try {
+                // Открыть сокет (Socket) для обращения к локальному компьютеру
+                // Сервер мы будем запускать на этом же компьютере
+                // Это специальный класс для сетевого взаимодействия c клиентской стороны
+                Socket socket = new Socket("127.0.0.1", portNumber);
+                // Пишем, что стартовали клиент
+                System.out.println("Клиент запущен! (host:127.0.0.1,port:" + portNumber + ")");
+                System.out.print("\nВведите строку для передачи серверу:");
+                // Создать поток для чтения символов из сокета
+                // Для этого надо открыть поток сокета - socket.getInputStream()
+                // Потом преобразовать его в поток символов - new InputStreamReader
+                // И уже потом сделать его читателем строк - BufferedReader
+                BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                // Создать поток для записи символов в сокет
+                PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
 
-        try
-        {
-            // Открыть сокет (Socket) для обращения к локальному компьютеру
-            // Сервер мы будем запускать на этом же компьютере
-            // Это специальный класс для сетевого взаимодействия c клиентской стороны
-            Socket socket = new Socket("127.0.0.1", portNumber);
-            // Пишем, что стартовали клиент
-            System.out.println("Клиент запущен! (host:127.0.0.1,port:"+portNumber+")");
-
-            // Создать поток для чтения символов из сокета
-            // Для этого надо открыть поток сокета - socket.getInputStream()
-            // Потом преобразовать его в поток символов - new InputStreamReader
-            // И уже потом сделать его читателем строк - BufferedReader
-            BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            // Создать поток для записи символов в сокет
-            PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
-
-            // Отправляем тестовую строку в сокет
-            pw.println(inputString);
-
-            String str;
-            // Входим в цикл чтения, что нам ответил сервер
-            while ((str = br.readLine()) != null) {
-                // Если пришел ответ “bye”, то заканчиваем цикл
-                if (str.equals("bye")) {
-                    break;
+                inputString ="";
+                while (inputString.equals("exit")==false)
+                {
+                    //Ждем ввода cтроки пользователем
+                    System.out.print("->");
+                    inputString = in.nextLine();
+                    // Отправляем полученную строку в сокет
+                    pw.println(inputString);
+                    // Входим в цикл чтения, что нам ответил сервер
+                    while ((str = br.readLine()) != null)
+                    {
+                        // Печатаем ответ от сервера и прерываем цикл
+                        System.out.println("Получен ответ сервера:" + str);
+                        break;
+                    }
                 }
-                // Печатаем ответ от сервера на консоль для проверки
-                System.out.println("Получен ответ сервера:"+str);
-                // Посылаем ему "bye" для окончания "разговора"
-                pw.println("bye");
+                //Если пользователь завершил сеанс, выводим соответствующее сообщение
+                System.out.println("Пользователь завершил работу с сервером.");
+                //Закрываем потоки и освобождаем все используемые ресурсы
+                br.close();
+                pw.close();
+                socket.close();
+                System.out.println("Cеанс связи с сервером успешно завершен!");
             }
-
-            br.close();
-            pw.close();
-            socket.close();
-            System.out.println("Cеанс связи с сервером успешно завершен!");
-        }
-        catch (IOException ex)
-        {System.out.println("Ошибка подключения! Проверьте, запущен ли сервер!!! Выполнение программы будет прекращено.");
-            ex.printStackTrace(System.out);}
+            catch (IOException ex)
+            {
+                System.out.println("Ошибка подключения! Проверьте, запущен ли сервер!!! Выполнение программы будет прекращено.");
+                ex.printStackTrace(System.out);
+            }
 
         //Благодарности :)
         System.out.println("\n************************** Cпасибо за использование нашей программы 'Client'!!! ************************");
