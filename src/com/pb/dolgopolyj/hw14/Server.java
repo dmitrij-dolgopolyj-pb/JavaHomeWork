@@ -31,7 +31,8 @@ public class Server {
             ServerSocket servSocket = new ServerSocket(port);
 
             // Входим в бесконечный цикл - ожидаем соединения
-            while (true) {
+            while (true)
+            {
                 System.out.println("Сервер ожидает соединения с пользователем(и), используем порт:" + port);
 
                 // Получив соединение начинаем работать с сокетом
